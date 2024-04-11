@@ -1,0 +1,90 @@
+package view;
+
+import com.sun.tools.javac.Main;
+
+import javax.imageio.ImageIO;
+import javax.print.attribute.SetOfIntegerSyntax;
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import static controller.Constants.*;
+
+public class SettingPanel extends JPanel {
+    private static SettingPanel INSTANCE;
+    public static int difficulty = 0, sensitivity = 0;
+    JLabel helloSettingLabel, sensitivityLabel, difficultyLabel, volumeLabel,
+            sensitivityPercentLabel, difficultyPercentLabel, volumePercentLabel ;
+    JSlider sensitivitySlider, difficultySlider, volumeSlider;
+
+    public static SettingPanel getINSTANCE() {
+        if(INSTANCE == null){
+            INSTANCE = new SettingPanel();
+        }
+        return INSTANCE;
+    }
+    private SettingPanel(){
+        MainView.mainPanel.setSize(SETTING_FRAME_WIDTH, SETTING_FRAME_HEIGHT);
+        MainView.mainFrame.setSize(SETTING_FRAME_WIDTH,SETTING_FRAME_HEIGHT);
+        this.setSize(SETTING_FRAME_WIDTH, SETTING_FRAME_HEIGHT);
+        this.setLocation(0, 0);
+        this.setLayout(null);
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(new File("settingbackground.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        assert image != null;
+        JLabel settingLabel = new JLabel(new ImageIcon(image));
+        settingLabel.setSize(SETTING_FRAME_WIDTH, SETTING_FRAME_HEIGHT);
+        settingLabel.setLocation(0, 0);
+        this.add(settingLabel);
+
+        helloSettingLabel = new JLabel("SETTINGS");
+        helloSettingLabel.setSize(200, 50);
+        helloSettingLabel.setFont(new Font(null, Font.PLAIN,40));
+        helloSettingLabel.setForeground(Color.WHITE);
+        helloSettingLabel.setLocation(250, 10);
+        settingLabel.add(helloSettingLabel);
+
+
+        sensitivityLabel = new JLabel("SENSITIVITY :");
+        sensitivityLabel.setSize(180, 50);
+        sensitivityLabel.setFont(new Font(null, Font.PLAIN,25));
+        sensitivityLabel.setForeground(Color.WHITE);
+        sensitivityLabel.setLocation(60, 100);
+
+        sensitivitySlider = new JSlider(JSlider.HORIZONTAL, 0 , 100, 0);
+        sensitivitySlider.setSize(new Dimension(300, 27));
+        sensitivitySlider.setLocation(new Point(260,110));
+        sensitivitySlider.setBackground(SETTING_SLIDERS_BACKGROUND_COLOR);
+        sensitivitySlider.setForeground(SETTING_SLIDERS_FOREGROUND_COLOR);
+        sensitivitySlider.addChangeListener(e -> {
+            sensitivity = sensitivitySlider.getValue();
+            sensitivityPercentLabel.setText(sensitivity + "%");
+            settingLabel.repaint();
+            settingLabel.revalidate();
+        });
+
+        sensitivityPercentLabel = new JLabel(0 + "%");
+        sensitivityPercentLabel.setSize(180, 50);
+        sensitivityPercentLabel.setFont(new Font(null, Font.PLAIN,27));
+        sensitivityPercentLabel.setForeground(Color.WHITE);
+        sensitivityPercentLabel.setLocation(600, 96);
+
+        settingLabel.add(sensitivityLabel);
+        settingLabel.add(sensitivitySlider);
+        settingLabel.add(sensitivityPercentLabel);
+
+        this.repaint();
+        this.revalidate();
+        MainView.mainPanel.add(this);
+        MainView.mainPanel.repaint();
+        MainView.mainPanel.revalidate();
+    }
+}
