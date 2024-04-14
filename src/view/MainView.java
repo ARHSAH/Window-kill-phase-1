@@ -7,7 +7,6 @@ import javax.swing.*;
 import static controller.Constants.MENU_FRAME_SIZE;
 
 public class MainView{
-    public static final int STANDARD_FRAME_SIZE = Constants.MENU_FRAME_SIZE;
     public static JFrame mainFrame;
     public static JPanel mainPanel;
 

@@ -1,5 +1,6 @@
 package view;
 
+import com.sun.tools.javac.Main;
 import controller.Constants;
 import view.MainView;
 
@@ -24,6 +25,13 @@ public class MenuPanel extends JPanel {
 
     public static final int STANDARD_FRAME_SIZE = Constants.MENU_FRAME_SIZE;
     JButton start, skillTree, settings, tutorial, exit;
+    JLabel helloMenuLabel;
+    private static Font loadFont(String filename) {
+        try { File fontFile = new File(filename);
+            return Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(Font.PLAIN, 12); }
+        catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+            return null; } }
     private MenuPanel(){
         MainView.mainPanel.setSize(MENU_FRAME_SIZE, MENU_FRAME_SIZE);
         MainView.mainFrame.setSize(MENU_FRAME_SIZE,MENU_FRAME_SIZE);
@@ -42,35 +50,50 @@ public class MenuPanel extends JPanel {
         menuLabel.setLocation(0, 0);
         this.add(menuLabel);
 
+        Font customFont = loadFont("blooods_.ttf");
+
+        helloMenuLabel = new JLabel("WINDOW KILL");
+        helloMenuLabel.setSize(400, 50);
+        assert customFont != null;
+        helloMenuLabel.setFont(customFont.deriveFont(45f));
+        //helloMenuLabel.setFont(customFont);
+
+        helloMenuLabel.setForeground(Color.RED);
+        helloMenuLabel.setLocation(150, 10);
+        menuLabel.add(helloMenuLabel);
+
         start = new JButton("Start");
         start.setBorderPainted(false);
         start.setLocation(new java.awt.Point(225, 100));
-        start.setSize(new Dimension(150, 53));
+        start.setSize(new Dimension(170, 47));
         start.setBackground(MENU_BUTTON_BACKGROUND_COLOR);
         start.setForeground(MENU_BUTTON_FOREGROUND_COLOR);
         start.setFocusable(false);
         start.setFont(new Font(null,Font.PLAIN, 20));
         start.addActionListener(e -> {
-
+            MainView.mainFrame.setState(JFrame.ICONIFIED);
+            GameView.getINSTANCE();
         });
         menuLabel.add(start);
 
         skillTree = new JButton("Skill Tree");
         skillTree.setBorderPainted(false);
         skillTree.setLocation(new java.awt.Point(225, 200));
-        skillTree.setSize(new Dimension(150, 53));
+        skillTree.setSize(new Dimension(170, 47));
         skillTree.setBackground(MENU_BUTTON_BACKGROUND_COLOR);
         skillTree.setForeground(MENU_BUTTON_FOREGROUND_COLOR);
         skillTree.setFocusable(false);
         skillTree.setFont(new Font(null,Font.PLAIN, 20));
         skillTree.addActionListener(e -> {
-
+            this.setVisible(false);
+            INSTANCE = null;
+            SkillTreePanel.getINSTANCE();
         });
         menuLabel.add(skillTree);
 
         settings = new JButton("Settings");
         settings.setLocation(new java.awt.Point(225, 300));
-        settings.setSize(new Dimension(150, 53));
+        settings.setSize(new Dimension(170, 47));
         settings.setBorderPainted(false);
         settings.setBackground(MENU_BUTTON_BACKGROUND_COLOR);
         settings.setForeground(MENU_BUTTON_FOREGROUND_COLOR);
@@ -86,7 +109,7 @@ public class MenuPanel extends JPanel {
         tutorial = new JButton("Tutorial");
         tutorial.setBorderPainted(false);
         tutorial.setLocation(new java.awt.Point(225, 400));
-        tutorial.setSize(new Dimension(150, 53));
+        tutorial.setSize(new Dimension(170, 47));
         tutorial.setBackground(MENU_BUTTON_BACKGROUND_COLOR);
         tutorial.setForeground(MENU_BUTTON_FOREGROUND_COLOR);
         tutorial.setFocusable(false);
