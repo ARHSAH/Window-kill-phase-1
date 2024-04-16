@@ -1,8 +1,8 @@
-package view;
+package view.panelsView;
 
-import com.sun.tools.javac.Main;
 import controller.Constants;
-import view.MainView;
+import controller.Controller;
+import controller.Update;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -72,7 +72,8 @@ public class MenuPanel extends JPanel {
         start.setFont(new Font(null,Font.PLAIN, 20));
         start.addActionListener(e -> {
             MainView.mainFrame.setState(JFrame.ICONIFIED);
-            GameView.getINSTANCE();
+            GamePanel.getINSTANCE();
+            new Update();
         });
         menuLabel.add(start);
 

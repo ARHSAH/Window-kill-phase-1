@@ -1,10 +1,6 @@
-package view;
-
-import controller.Constants;
+package view.panelsView;
 
 import javax.swing.*;
-
-import static controller.Constants.MENU_FRAME_SIZE;
 
 public class MainView{
     public static JFrame mainFrame;

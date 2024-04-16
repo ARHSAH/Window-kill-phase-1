@@ -17,6 +17,8 @@ public class Constants {
     public static final Color SKILLTREE_ACTIVE_BUTTONS_BACKGROUND_COLOR = Color.decode("#008000");
     public static final Color SKILLTREE_DIACTIVE_BUTTONS_BACKGROUND_COLOR = Color.decode("#0077B6");
     public static final int SHRINK_AMOUNT = 5;
+    public static final int UPS = 10;
+    public static final double BALL_SPEED = 7.5;
 
 
 }

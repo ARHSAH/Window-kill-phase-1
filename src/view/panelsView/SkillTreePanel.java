@@ -1,15 +1,7 @@
-package view;
+package view.panelsView;
 
-import controller.Variables;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 import static controller.Constants.*;
 
@@ -30,7 +22,7 @@ public class SkillTreePanel extends JPanel {
     JLabel xpLabel;
     JButton exit;
     JLabel helloSkillTreeLabel;
-    public SkillTreePanel(){
+    private SkillTreePanel(){
         ImageIcon lockIcon = new ImageIcon("lock.png");
         MainView.mainPanel.setSize(SKILLTREE_FRAME_WIDTH, SKILLTREE_FRAME_HEIGHT);
         MainView.mainFrame.setSize(SKILLTREE_FRAME_WIDTH,SKILLTREE_FRAME_HEIGHT);

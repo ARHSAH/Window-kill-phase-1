@@ -1,4 +1,4 @@
-package model;
+package model.movement;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -9,8 +9,14 @@ public class Direction {
     double slope;
     DirectionState state = DirectionState.neutral;
     public Direction(Point2D point){
-        if (point.getX() == 0 && point.getY() > 0) isUpward=true;
-        else if (point.getX() == 0 && point.getY() < 0) isDownward=true;
+        if (point.getX() == 0 && point.getY() > 0) {
+            isUpward = true;
+            state = DirectionState.positive;
+        }
+        else if (point.getX() == 0 && point.getY() < 0) {
+            isDownward=true;
+            state = DirectionState.negative;
+        }
         else if (point.getX() ==0 ) state=DirectionState.neutral;
         else {
             this.slope = point.getY() / point.getX();
@@ -19,16 +25,6 @@ public class Direction {
         }
     }
 
-    public Direction(double angle) {
-        angle = angle - Math.floor(angle / 360) * 360;
-        if (angle == 90) isUpward=true;
-        if (angle == 270) isDownward=true;
-        double x = Math.cos(Math.toRadians(angle));
-        double y = Math.sin(Math.toRadians(angle));
-        this.slope = y / x;
-        if (angle >= 0 && angle < 180) state = DirectionState.positive;
-        else state = DirectionState.negative;
-    }
 
     public Point2D getDirectionVector(){
         if (state == DirectionState.neutral) return new Point(0,0);
