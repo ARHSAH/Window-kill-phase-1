@@ -35,7 +35,7 @@ public class SkillTreePanel extends JPanel {
         helloSkillTreeLabel.setSize(200, 50);
         helloSkillTreeLabel.setFont(new Font(null, Font.PLAIN,35));
         helloSkillTreeLabel.setForeground(Color.BLACK);
-        helloSkillTreeLabel.setLocation(250, 20);
+        helloSkillTreeLabel.setLocation(250, 0);
         this.add(helloSkillTreeLabel);
 
         xpLabel = new JLabel(String.valueOf(xp));
@@ -234,17 +234,20 @@ public class SkillTreePanel extends JPanel {
         Image img = imageIcon.getImage();
         Graphics2D g2D = (Graphics2D)g;
         g2D.drawImage(img, 0 , 0, this);
-
-        //ATTACK
         g2D.setColor(Color.BLACK);
+
+        g2D.drawLine(135,66, 585, 66);
+        g2D.drawLine(365,66, 365, 107);
+        g2D.drawLine(135,66, 135, 107);
+        g2D.drawLine(365,66, 365, 107);
+        g2D.drawLine(585,66, 585, 107);
+        //ATTACK
         g2D.drawRect(45,107,180,40);
         g2D.drawLine(135,148, 135, 170);
         //DEFEND
-        g2D.setColor(Color.BLACK);
         g2D.drawRect(275,107,180,40);
         g2D.drawLine(365,148, 365, 170);
         //SHAPE
-        g2D.setColor(Color.BLACK);
         g2D.drawRect(505,107,160,40);
         g2D.drawLine(585,148, 585, 170);
     }

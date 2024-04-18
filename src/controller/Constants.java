@@ -19,6 +19,8 @@ public class Constants {
     public static final int SHRINK_AMOUNT = 5;
     public static final int UPS = 10;
     public static final double BALL_SPEED = 7.5;
+    public static final double BULLET_SPEED = 10;
+    public static final int MINIMUM_FRAME_SIZE = 340;
 
 
 }

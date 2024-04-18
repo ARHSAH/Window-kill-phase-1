@@ -21,7 +21,7 @@ public class EpsilonModel implements Movable {
     public static EpsilonModel getINSTANCE() {
         if(INSTANCE == null){
             INSTANCE = new EpsilonModel((double) frameWidth / 2 ,
-                    (double) frameHeight / 2, 25, 100, 0 );
+                    (double) frameHeight / 2, 25, 100, 0.5 );
         }
         return INSTANCE;
     }
@@ -35,7 +35,7 @@ public class EpsilonModel implements Movable {
 
     public static void setEpsilonSpeed(){
         if(getINSTANCE().getSpeed() < BALL_SPEED){
-            getINSTANCE().setSpeed(getINSTANCE().getSpeed() + 2.5);
+            getINSTANCE().setSpeed(getINSTANCE().getSpeed() + 3.5);
         }
     }
 
