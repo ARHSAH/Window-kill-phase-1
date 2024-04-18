@@ -88,7 +88,9 @@ public class MenuPanel extends JPanel {
         skillTree.addActionListener(e -> {
             this.setVisible(false);
             INSTANCE = null;
-            SkillTreePanel.getINSTANCE();
+            MainView.mainPanel.setSize(SKILLTREE_FRAME_WIDTH, SKILLTREE_FRAME_HEIGHT);
+            MainView.mainFrame.setSize(SKILLTREE_FRAME_WIDTH,SKILLTREE_FRAME_HEIGHT);
+            SkillTreePanel.getINSTANCE().setVisible(true);
         });
         menuLabel.add(skillTree);
 
@@ -103,7 +105,9 @@ public class MenuPanel extends JPanel {
         settings.addActionListener(e -> {
             this.setVisible(false);
             INSTANCE = null;
-            SettingPanel.getINSTANCE();
+            SettingPanel.getINSTANCE().setVisible(true);
+            MainView.mainPanel.setSize(SETTING_FRAME_WIDTH, SETTING_FRAME_HEIGHT);
+            MainView.mainFrame.setSize(SETTING_FRAME_WIDTH,SETTING_FRAME_HEIGHT);
         });
         menuLabel.add(settings);
 

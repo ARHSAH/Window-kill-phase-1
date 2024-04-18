@@ -1,5 +1,6 @@
 package model.charactersModel;
 
+import controller.Variables;
 import model.movement.Direction;
 import model.movement.Movable;
 
@@ -25,15 +26,14 @@ public class BulletModel implements Movable {
     public Clip clip;
 
 
-    public BulletModel(double x , double y, int radius) {
+    public BulletModel(double x , double y, int radius, int damage) {
         try {
             File file = new File("bulletSound.wav");
-            ;
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
-//            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-//            gainControl.setValue(volume);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue((int)(volume / 1.2) - 80);
             clip.loop(1);
             clip.start();
         } catch (Exception e) {

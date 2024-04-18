@@ -8,10 +8,10 @@ import java.io.File;
 import java.io.IOException;
 
 import static controller.Constants.*;
+import static controller.Variables.*;
 
 public class SettingPanel extends JPanel {
     private static SettingPanel INSTANCE;
-    private static int difficulty = 0, sensitivity = 0, volume = 0;
 
 
     JLabel helloSettingLabel, sensitivityLabel, difficultyLabel, volumeLabel,
@@ -146,7 +146,6 @@ public class SettingPanel extends JPanel {
         exit.setBorderPainted(false);
         exit.addActionListener(e -> {
             this.setVisible(false);
-            INSTANCE = null;
             MenuPanel.getINSTANCE();
         });
         settingLabel.add(exit);

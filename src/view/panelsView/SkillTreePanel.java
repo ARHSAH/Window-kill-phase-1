@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static controller.Constants.*;
+import static controller.Variables.activeAbility;
 
 public class SkillTreePanel extends JPanel {
     private static SkillTreePanel INSTANCE;
@@ -87,6 +88,7 @@ public class SkillTreePanel extends JPanel {
                 if(!aresActive){
                     if(!acesoActive && !proteusActive) {
                         aresActive = true;
+                        activeAbility = "ares";
                         aresButton.setBackground(SKILLTREE_ACTIVE_BUTTONS_BACKGROUND_COLOR);
                     }else{
                         JOptionPane.showMessageDialog(null,
@@ -94,6 +96,7 @@ public class SkillTreePanel extends JPanel {
                     }
                 }else{
                     aresActive = false;
+                    activeAbility = "";
                     aresButton.setBackground(SKILLTREE_DIACTIVE_BUTTONS_BACKGROUND_COLOR);
                 }
             }
@@ -139,6 +142,7 @@ public class SkillTreePanel extends JPanel {
                 if(!acesoActive){
                     if(!aresActive && !proteusActive) {
                         acesoActive = true;
+                        activeAbility = "aceso";
                         acesoButton.setBackground(SKILLTREE_ACTIVE_BUTTONS_BACKGROUND_COLOR);
                     }else{
                         JOptionPane.showMessageDialog(null,
@@ -146,6 +150,7 @@ public class SkillTreePanel extends JPanel {
                     }
                 }else{
                     acesoActive = false;
+                    activeAbility = "";
                     acesoButton.setBackground(SKILLTREE_DIACTIVE_BUTTONS_BACKGROUND_COLOR);
                 }
             }
@@ -191,6 +196,7 @@ public class SkillTreePanel extends JPanel {
                 if(!proteusActive){
                     if(!aresActive && !acesoActive) {
                         proteusActive = true;
+                        activeAbility = "proteus";
                         proteusButton.setBackground(SKILLTREE_ACTIVE_BUTTONS_BACKGROUND_COLOR);
                     }else{
                         JOptionPane.showMessageDialog(null,
@@ -198,6 +204,7 @@ public class SkillTreePanel extends JPanel {
                     }
                 }else{
                     proteusActive = false;
+                    activeAbility = "";
                     proteusButton.setBackground(SKILLTREE_DIACTIVE_BUTTONS_BACKGROUND_COLOR);
                 }
             }
@@ -214,7 +221,6 @@ public class SkillTreePanel extends JPanel {
         exit.setBorderPainted(false);
         exit.addActionListener(e -> {
             this.setVisible(false);
-            INSTANCE = null;
             MenuPanel.getINSTANCE();
         });
         this.add(exit);

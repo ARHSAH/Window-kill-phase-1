@@ -1,13 +1,22 @@
 package model.collision;
 
 import model.charactersModel.BulletModel;
+import model.charactersModel.EpsilonModel;
+import view.panelsView.GameFrame;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import static controller.Constants.FRAME_SHRINK_AMOUNT;
 import static controller.Variables.*;
 import static model.charactersModel.BulletModel.bulletModels;
 
 public class Collision {
+    static int frameTimer;
+
     public static void checkBulletFrame(){
         ArrayList<BulletModel> bulletModels1 = new ArrayList<>();
         for(BulletModel value : bulletModels) {
@@ -17,8 +26,11 @@ public class Collision {
             }
         }
         for(BulletModel value : bulletModels1) {
-           value.clip.stop();
-           bulletModels.remove(value);
+            if(value.getX() > frameWidth){
+                value.clip.stop();
+                bulletModels.remove(value);
+            }
         }
+
     }
 }

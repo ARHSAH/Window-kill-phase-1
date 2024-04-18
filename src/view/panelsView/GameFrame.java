@@ -10,7 +10,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 
 import static controller.Constants.MINIMUM_FRAME_SIZE;
-import static controller.Constants.SHRINK_AMOUNT;
 import static controller.Variables.*;
 
 public class GameFrame extends JFrame {

@@ -8,8 +8,7 @@ import java.awt.geom.Point2D;
 
 import static controller.Constants.BALL_SPEED;
 import static controller.Utils.multiplyVector;
-import static controller.Variables.frameHeight;
-import static controller.Variables.frameWidth;
+import static controller.Variables.*;
 
 public class EpsilonModel implements Movable {
     private static EpsilonModel INSTANCE;
@@ -35,7 +34,7 @@ public class EpsilonModel implements Movable {
 
     public static void setEpsilonSpeed(){
         if(getINSTANCE().getSpeed() < BALL_SPEED){
-            getINSTANCE().setSpeed(getINSTANCE().getSpeed() + 3.5);
+            getINSTANCE().setSpeed(getINSTANCE().getSpeed() + 3.5 + (double)sensitivity / 50);
         }
     }
 

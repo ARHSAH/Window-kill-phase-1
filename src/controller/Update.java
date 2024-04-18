@@ -13,7 +13,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
 
-import static controller.Constants.SHRINK_AMOUNT;
+import static controller.Constants.*;
 import static controller.Controller.setViewLocation;
 import static controller.Controller.startShrinkage;
 import static controller.Utils.multiplyVector;
@@ -28,6 +28,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
     Timer timer;
     EpsilonModel epsilon = EpsilonModel.getINSTANCE();
     public Update(){
+        //xp = 0;
         timer = new Timer(Constants.UPS, this);
         timer.start();
         GameFrame.getINSTANCE().addKeyListener(this);
@@ -36,16 +37,31 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
+        System.out.println(damage);
         bulletTimer ++;
         updateModel();
         updateView();
         if(firstOfGame){
             startShrinkage();
         }
-
+        if(activeGAbility) {
+            if (activeAbility.equals("ares")) {
+                if (abilityCoolDown > 1000) {
+                    damage = BULLET_DAMAGE;
+                    activeGAbility = false;
+                }else{
+                    damage = BULLET_DAMAGE + 2;
+                }
+            }
+        }
+        abilityCoolDown ++;
     }
 
     public void updateView(){
+
+
+
         setViewLocation();
         GamePanel.getINSTANCE().repaint();
         GamePanel.getINSTANCE().revalidate();
@@ -82,11 +98,18 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
             if(bulletTimer > 15) {
                 bulletTimer = 0;
                 new BulletModel(EpsilonModel.getINSTANCE().getX(),
-                        EpsilonModel.getINSTANCE().getY(), 4);
+                        EpsilonModel.getINSTANCE().getY(), 4, damage);
                 bulletDirection = new Direction(new Point2D.Double(
                          (mouseLocation.getX() - EpsilonModel.getINSTANCE().getX()),
                         mouseLocation.getY() - EpsilonModel.getINSTANCE().getY()));
             }
+        }
+
+        if(!activeAbility.isEmpty() && e.getKeyChar() == 'k' && abilityCoolDown >= 30000 && xp > 100){
+            System.out.println("salam");
+            xp -= 100;
+            activeGAbility = true;
+            abilityCoolDown = 0;
         }
     }
 

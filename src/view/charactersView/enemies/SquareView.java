@@ -1,0 +1,38 @@
+package view.charactersView.enemies;
+
+import java.util.ArrayList;
+
+public class SquareView {
+    private double x, y;
+    private int id;
+    public static ArrayList<SquareView> squareViews = new ArrayList<>();
+    public SquareView(int id){
+        this.id = id;
+        squareViews.add(this);
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+}
