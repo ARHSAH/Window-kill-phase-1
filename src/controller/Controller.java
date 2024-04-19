@@ -7,6 +7,7 @@ import view.charactersView.BulletView;
 import view.charactersView.EpsilonView;
 import view.charactersView.enemies.SquareView;
 import view.panelsView.GameFrame;
+import view.panelsView.GamePanel;
 
 import java.awt.*;
 
@@ -40,15 +41,16 @@ public class Controller {
             value.setY(bulletModel.getY());
             value.setRadius(bulletModel.getRadius());
         }
+
         for (SquareView value : squareViews) {
-            BulletModel bulletModel = findBulletModel(value.getId());
-            if(bulletModel == null){
+            SquareModel squareModel = findSquareModel(value.getId());
+            if(squareModel == null){
                 squareViews.remove(value);
                 return;
             }
-            value.setX(bulletModel.getX());
-            value.setY(bulletModel.getY());
-           // value.setLength(SquareModel.get);
+            value.setX(squareModel.getX());
+            value.setY(squareModel.getY());
+            value.setLength(squareModel.getLength());
         }
     }
     public static BulletModel findBulletModel(int id){
@@ -88,17 +90,35 @@ public class Controller {
         }
     }
 
-//    public static void frameExtending(String direction){
-//        if(direction.equals("right")) {
-//            GameFrame.getINSTANCE().setLocation(new Point(
-//                    GameFrame.getINSTANCE().getX() + FRAME_SHRINK_AMOUNT,
-//                    GameFrame.getINSTANCE().getY()));
-//            frameWidth += 2 * FRAME_SHRINK_AMOUNT;
-//            EpsilonModel.getINSTANCE().setX((double) frameWidth / 2);
-//            EpsilonModel.getINSTANCE().setY((double) frameHeight / 2);
-//            GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
-//        }
-//    }
-
-
-}
+    public static void frameExtending(String direction){
+            if (direction.equals("right")) {
+                GameFrame.getINSTANCE().setLocation(new Point(
+                        GameFrame.getINSTANCE().getX() + FRAME_SHRINK_AMOUNT,
+                        GameFrame.getINSTANCE().getY()));
+                frameWidth += 2 * FRAME_SHRINK_AMOUNT;
+                GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
+            }
+            else if (direction.equals("left")) {
+                GameFrame.getINSTANCE().setLocation(new Point(
+                    GameFrame.getINSTANCE().getX() - 3 * FRAME_SHRINK_AMOUNT,
+                    GameFrame.getINSTANCE().getY()));
+                frameWidth += 2 * FRAME_SHRINK_AMOUNT;
+                GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
+            }
+            else if (direction.equals("bottom")) {
+                GameFrame.getINSTANCE().setLocation(new Point(
+                        GameFrame.getINSTANCE().getX(),
+                        GameFrame.getINSTANCE().getY() + FRAME_SHRINK_AMOUNT));
+                frameHeight += 2 * FRAME_SHRINK_AMOUNT;
+                GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
+            }
+            else if(direction.equals("top")){
+                GameFrame.getINSTANCE().setLocation(new Point(
+                        GameFrame.getINSTANCE().getX(),
+                        GameFrame.getINSTANCE().getY() - 3 * FRAME_SHRINK_AMOUNT));
+                frameHeight += 2 * FRAME_SHRINK_AMOUNT;
+                GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
+            }
+          GamePanel.getINSTANCE().setSize(frameWidth, frameHeight);
+        }
+    }

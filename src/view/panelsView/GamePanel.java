@@ -3,6 +3,7 @@ package view.panelsView;
 import controller.Variables;
 import view.charactersView.BulletView;
 import view.charactersView.EpsilonView;
+import view.charactersView.enemies.SquareView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +14,7 @@ import java.awt.geom.Point2D;
 
 import static controller.Variables.*;
 import static view.charactersView.BulletView.bulletViews;
+import static view.charactersView.enemies.SquareView.squareViews;
 
 public class GamePanel extends JPanel {
     private static GamePanel INSTANCE;
@@ -43,6 +45,12 @@ public class GamePanel extends JPanel {
         EpsilonView.getINSTANCE().draw(g2);
         for (BulletView value : bulletViews) {
             value.draw(g2);
+        }
+        g2.setColor(Color.green);
+        for (SquareView value : squareViews) {
+            value.draw(g2);
+            this.repaint();
+            this.revalidate();
         }
     }
 }

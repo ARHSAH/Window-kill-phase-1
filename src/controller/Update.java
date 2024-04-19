@@ -2,6 +2,7 @@ package controller;
 
 import model.charactersModel.BulletModel;
 import model.charactersModel.EpsilonModel;
+import model.charactersModel.enemies.SquareModel;
 import model.movement.Direction;
 import view.charactersView.BulletView;
 import view.charactersView.EpsilonView;
@@ -12,15 +13,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 import static controller.Constants.*;
-import static controller.Controller.setViewLocation;
-import static controller.Controller.startShrinkage;
+import static controller.Controller.*;
 import static controller.Utils.multiplyVector;
 import static controller.Variables.*;
 import static java.nio.file.Files.move;
 import static model.charactersModel.BulletModel.bulletModels;
+import static model.charactersModel.enemies.SquareModel.squareModels;
 import static model.collision.Collision.checkBulletFrame;
+import static model.collision.Collision.checkCircleSquare;
+import static view.charactersView.BulletView.bulletViews;
+import static view.charactersView.enemies.SquareView.squareViews;
 
 
 public class Update implements ActionListener, KeyListener, MouseMotionListener{
@@ -28,7 +33,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
     Timer timer;
     EpsilonModel epsilon = EpsilonModel.getINSTANCE();
     public Update(){
-        //xp = 0;
+        xp = 0;
         timer = new Timer(Constants.UPS, this);
         timer.start();
         GameFrame.getINSTANCE().addKeyListener(this);
@@ -37,13 +42,13 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
-        System.out.println(damage);
         bulletTimer ++;
-        updateModel();
-        updateView();
-        if(firstOfGame){
-            startShrinkage();
+        if(frameExtendingTimer < 5 && !frameExtendingDirection.isEmpty()){
+            frameExtendingTimer ++;
+            frameExtending(frameExtendingDirection);
+        }else{
+            frameExtendingTimer = 0;
+            frameExtendingDirection = "";
         }
         if(activeGAbility) {
             if (activeAbility.equals("ares")) {
@@ -56,20 +61,53 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
             }
         }
         abilityCoolDown ++;
+
+        updateModel();
+        updateView();
     }
 
     public void updateView(){
-
-
-
+        if(firstOfGame){
+            startShrinkage();
+        }
         setViewLocation();
         GamePanel.getINSTANCE().repaint();
         GamePanel.getINSTANCE().revalidate();
     }
     public void updateModel(){
+        removedSquares = new ArrayList<>();
+        removedBullets = new ArrayList<>();
+        for(SquareModel squareModel : squareModels){
+            for(BulletModel bulletModel : bulletModels){
+                if(checkCircleSquare(new Point2D.Double(bulletModel.getX(), bulletModel.getY() ), bulletModel.getRadius(),
+                        new Point2D.Double(squareModel.getX(), squareModel.getY()), squareModel.getLength())){
+                    squareModel.setHp(squareModel.getHp() - 5);
+                    removedBullets.add(bulletModel);
+                }
+            }
+        }
+        for(SquareModel value : squareModels){
+            if(value.getHp() > 0) {
+                Direction direction = new Direction(new Point2D.Double(EpsilonModel.getINSTANCE().getX() - value.getX(),
+                        EpsilonModel.getINSTANCE().getY() - value.getY()));
+                value.setDirection(direction);
+                value.move(direction, SQUARE_SPEED);
+            }else{
+                removedSquares.add(value);
+            }
+        }
+        for(SquareModel value : removedSquares){
+            squareModels.remove(value);
+        }
+        for(BulletModel value : removedBullets){
+            value.clip.stop();
+            bulletModels.remove(value);
+        }
+
         for (BulletModel value : bulletModels) {
             value.move(bulletDirection, Variables.bulletSpeed);
         }
+
         checkBulletFrame();
     }
     @Override
@@ -106,7 +144,6 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
         }
 
         if(!activeAbility.isEmpty() && e.getKeyChar() == 'k' && abilityCoolDown >= 30000 && xp > 100){
-            System.out.println("salam");
             xp -= 100;
             activeGAbility = true;
             abilityCoolDown = 0;

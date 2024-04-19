@@ -1,9 +1,12 @@
 package controller;
 
+import model.charactersModel.BulletModel;
+import model.charactersModel.enemies.SquareModel;
 import view.panelsView.SettingPanel;
 import view.panelsView.SkillTreePanel;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 
 public class Variables {
@@ -22,8 +25,10 @@ public class Variables {
     public static String frameExtendingDirection = "";
     public static int  bulletNumbers;
     public static int damage = 5;
-    public  static int squarantinesNumber;
+    public  static int squaresNumber = 0;
     public static String activeAbility = "";
     public static int abilityCoolDown = 30000;
     public static boolean activeGAbility;
+    public static ArrayList<BulletModel> removedBullets;
+    public static ArrayList<SquareModel> removedSquares;
 }

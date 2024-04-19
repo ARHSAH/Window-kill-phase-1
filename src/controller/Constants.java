@@ -18,12 +18,19 @@ public class Constants {
     public static final Color SKILLTREE_DIACTIVE_BUTTONS_BACKGROUND_COLOR = Color.decode("#0077B6");
     public static final int START_SHRINK_AMOUNT = 5;
     public static final int FRAME_SHRINK_AMOUNT = 1;
+    public static final int FRAME_EXTEND_AMOUNT = 3;
     public static final int UPS = 10;
     public static final double BALL_SPEED = 7.5;
     public static final double BULLET_SPEED = 10;
     public static final int MINIMUM_FRAME_SIZE = 340;
-    public static final int SQUARE_LENGTH = 20;
+    public static final int SQUARE_LENGTH = 30;
     public static final int BULLET_DAMAGE = 5;
+    public static final int EPSILON_HP = 100;
+    public static final int SQUARE_HP = 10;
+    public static final double SQUARE_SPEED = 0.2;
+    public static final int SQUARE_DAMAGE = 10;
+    public static final int TRIANGLE_HP = 15;
+
 
 
 }
