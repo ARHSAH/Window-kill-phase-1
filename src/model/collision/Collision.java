@@ -20,22 +20,22 @@ import static model.charactersModel.BulletModel.bulletModels;
 public class Collision {
     static int frameTimer;
 
-    public static void checkBulletFrame(){
+    public static void checkBulletFrame() {
         ArrayList<BulletModel> bulletModels1 = new ArrayList<>();
-        for(BulletModel value : bulletModels) {
+        for (BulletModel value : bulletModels) {
             if (value.getX() < 2 || value.getX() > frameWidth ||
                     value.getY() < 2 || value.getY() > frameHeight) {
                 bulletModels1.add(value);
             }
         }
-        for(BulletModel value : bulletModels1) {
-            if(value.getX() > frameWidth){
+        for (BulletModel value : bulletModels1) {
+            if (value.getX() > frameWidth) {
                 frameExtendingDirection = "right";
-            }else if(value.getX() < 1){
+            } else if (value.getX() < 1) {
                 frameExtendingDirection = "left";
-            }else if(value.getY() > frameHeight){
+            } else if (value.getY() > frameHeight) {
                 frameExtendingDirection = "bottom";
-            }else if(value.getY() < 1){
+            } else if (value.getY() < 1) {
                 frameExtendingDirection = "top";
             }
             value.clip.stop();
@@ -43,30 +43,36 @@ public class Collision {
         }
     }
 
-    public static boolean checkCircleSquare(Point2D.Double center, double radius,
-                                         Point2D.Double leftTopV, int length) {
-        return (center.getX() > leftTopV.getX() + length &&
-                center.getY() > leftTopV.getY() &&
-                center.getY() < leftTopV.getY() + length
-                && center.getX() - (leftTopV.getX() + length) < radius)
-                || (center.getX() < leftTopV.getX() &&
-                center.getY() > leftTopV.getY() &&
-                center.getY() < leftTopV.getY() + length
-                && center.getX() - (leftTopV.getX() + length) < radius) ||
-                (center.getY() < leftTopV.getY() &&
-                        center.getX() > leftTopV.getX() &&
-                        center.getX() < leftTopV.getX() + length
-                        && center.getY() - (leftTopV.getY() + length) < radius) ||
-                (center.getY() > leftTopV.getY() + length &&
-                        center.getX() > leftTopV.getX() &&
-                        center.getX() < leftTopV.getX() + length
-                        && center.getY() - (leftTopV.getY() + length) < radius)
-                || (distance(center, leftTopV) < radius)
-                || (distance(center, new Point2D.Double
-                (leftTopV.getX() + length , leftTopV.getY())) < radius) ||
-                (distance(center, new Point2D.Double
-                        (leftTopV.getX(), leftTopV.getY() + length)) < radius) ||
-                (distance(center, new Point2D.Double
-                        (leftTopV.getX() + length, leftTopV.getY() + length)) < radius);
+    public static Point2D collisionCircleSquare(Point2D.Double center, double radius, SquareModel squareModel) {
+        ArrayList<Point2D> vertices = new ArrayList<>();
+        vertices.add(new Point2D.Double(squareModel.getX(), squareModel.getY()));
+        vertices.add(new Point2D.Double(squareModel.getX() + squareModel.getLength(),
+                squareModel.getY()));
+        vertices.add(new Point2D.Double(squareModel.getX() + squareModel.getLength(),
+                squareModel.getY() + squareModel.getLength()));
+        vertices.add(new Point2D.Double(squareModel.getX(),
+                squareModel.getY() + squareModel.getLength()));
+        return closestPointOnPolygon(center, vertices);
+    }
+    public static Point2D closestPointOnPolygon(Point2D point, ArrayList<Point2D> vertices) {
+        double minDistance = Double.MAX_VALUE;
+        Point2D closest = null;
+        for (int i = 0; i < vertices.size(); i++) {
+            Point2D temp = getClosestPointOnSegment(vertices.get(i), vertices.get((i + 1) % vertices.size()), point);
+            double distance = temp.distance(point);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closest = temp;
+            }
+        }
+        return closest;
+    }
+
+    public static Point2D getClosestPointOnSegment(Point2D head1, Point2D head2, Point2D point) {
+        double u = ((point.getX() - head1.getX()) * (head2.getX() - head1.getX()) + (point.getY() - head1.getY()) * (head2.getY() - head1.getY())) / head2.distanceSq(head1);
+        if (u > 1.0) return (Point2D) head2.clone();
+        else if (u <= 0.0) return (Point2D) head1.clone();
+        else
+            return new Point2D.Double(head2.getX() * u + head1.getX() * (1.0 - u) + 0.5, head2.getY() * u + head1.getY() * (1.0 - u) + 0.5);
     }
 }

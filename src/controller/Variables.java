@@ -31,4 +31,6 @@ public class Variables {
     public static boolean activeGAbility;
     public static ArrayList<BulletModel> removedBullets;
     public static ArrayList<SquareModel> removedSquares;
+    public static int eRight, eLeft, eUp, eDown;
+    public static boolean a;
 }

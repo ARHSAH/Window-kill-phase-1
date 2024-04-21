@@ -6,7 +6,8 @@ import model.movement.Movable;
 
 import java.awt.geom.Point2D;
 
-import static controller.Constants.BALL_SPEED;
+import static controller.Constants.EPSILON_MAX_SPEED;
+import static controller.Constants.EPSILON_RADIUS;
 import static controller.Utils.multiplyVector;
 import static controller.Variables.*;
 
@@ -17,25 +18,32 @@ public class EpsilonModel implements Movable {
 
     double speed;
 
+
+
+    private Point2D direction;
+    private boolean impact;
+
     public static EpsilonModel getINSTANCE() {
         if(INSTANCE == null){
             INSTANCE = new EpsilonModel((double) frameWidth / 2 ,
-                    (double) frameHeight / 2, 25, 100, 0.5 );
+                    (double) frameHeight / 2, EPSILON_RADIUS, 100, 0.5, new Point2D.Double(0,0));
         }
         return INSTANCE;
     }
-    private EpsilonModel(double x, double y, int radius , int hp, double speed){
+    private EpsilonModel(double x, double y, int radius , int hp, double speed, Point2D direction){
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.hp = hp;
         this.speed = speed;
+        this.direction = direction;
     }
 
     public static void setEpsilonSpeed(){
-        if(getINSTANCE().getSpeed() < BALL_SPEED){
-            getINSTANCE().setSpeed(getINSTANCE().getSpeed() + 3.5 + (double)sensitivity / 50);
+        if(getINSTANCE().getSpeed() < EPSILON_MAX_SPEED){
+            getINSTANCE().setSpeed(getINSTANCE().getSpeed() + 2.5 + (double)sensitivity / 50);
         }
+
     }
 
     @Override
@@ -44,24 +52,24 @@ public class EpsilonModel implements Movable {
 
     @Override
     public void move(Direction direction){
-        double limit = BALL_SPEED + INSTANCE.getRadius();
-        if((direction.getDirectionVector().getY() < 0 && INSTANCE.getY() > limit) ||
-                (direction.getDirectionVector().getY() > 0 && INSTANCE.getY() < frameHeight - limit - 26 ) ) {
-            INSTANCE.setY(INSTANCE.getY() +
-                    multiplyVector(direction.getDirectionVector(), INSTANCE.getSpeed()).getY());
-            setEpsilonSpeed();
-        }
-        if((direction.getDirectionVector().getX() < 0 && INSTANCE.getX() > limit) ||
-                (direction.getDirectionVector().getX() > 0 && INSTANCE.getX() < frameWidth - limit - 10 ) ) {
-            INSTANCE.setX(INSTANCE.getX() +
-                    multiplyVector(direction.getDirectionVector(), INSTANCE.getSpeed()).getX());
-            setEpsilonSpeed();
-        }
+
     }
 
     @Override
     public void move() {
-
+        double limit = EPSILON_MAX_SPEED + INSTANCE.getRadius();
+        if((direction.getY() < 0 && INSTANCE.getY() > limit) ||
+                (direction.getY() > 0 && INSTANCE.getY() < frameHeight - limit - 26 ) ) {
+            INSTANCE.setY(INSTANCE.getY() +
+                    multiplyVector(direction, INSTANCE.getSpeed()).getY());
+            setEpsilonSpeed();
+        }
+        if((direction.getX() < 0 && INSTANCE.getX() > limit) ||
+                (direction.getX() > 0 && INSTANCE.getX() < frameWidth - limit - 10 ) ) {
+            INSTANCE.setX(INSTANCE.getX() +
+                    multiplyVector(direction, INSTANCE.getSpeed()).getX());
+            setEpsilonSpeed();
+        }
     }
 
     public static void setINSTANCE(EpsilonModel INSTANCE) {
@@ -106,7 +114,19 @@ public class EpsilonModel implements Movable {
     public void setSpeed(double speed) {
         this.speed = speed;
     }
+    public Point2D getDirection() {
+        return direction;
+    }
 
+    public void setDirection(Point2D direction) {
+        this.direction = direction;
+    }
 
+    public boolean isImpact() {
+        return impact;
+    }
 
+    public void setImpact(boolean impact) {
+        this.impact = impact;
+    }
 }

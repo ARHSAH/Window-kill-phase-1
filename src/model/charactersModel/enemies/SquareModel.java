@@ -6,8 +6,9 @@ import model.movement.Movable;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Random;
 
-import static controller.Controller.createSquarantineView;
+import static controller.Controller.createSquareView;
 import static controller.Utils.multiplyVector;
 
 public class SquareModel implements Movable {
@@ -17,29 +18,29 @@ public class SquareModel implements Movable {
     private int id;
     private Point2D center ;
 
-
-
     private int length;
-    Direction direction;
+    private double speed;
+    Point2D direction;
     public static ArrayList<SquareModel> squareModels = new ArrayList<>();
-    public SquareModel(double x, double y, int length, int hp, int damage, Direction direction){
+    private boolean impact;
+    int dash = 1;
+    public SquareModel(double x, double y, int length, int hp, int damage, double speed, Point2D direction){
         Variables.squaresNumber ++;
         this.x = x;
         this.y = y;
         this.length = length;
         this.hp = hp;
         this.damage = damage;
+        this.speed = speed;
         this.direction = direction;
         this.id = Variables.squaresNumber;
-        center = new Point2D.Double(x + (length / 2), y + (length / 2));
+        center = new Point2D.Double(x + (double) (length / 2), y + (double) (length / 2));
         squareModels.add(this);
-        createSquarantineView(id);
+        createSquareView(id);
     }
     @Override
     public void move(Direction direction, double speed) {
-        Point2D vector = multiplyVector(direction.getDirectionVector(), speed);
-        setX(getX() + vector.getX());
-        setY(getY() + vector.getY());
+
     }
 
     public double getX() {
@@ -82,11 +83,11 @@ public class SquareModel implements Movable {
         this.id = id;
     }
 
-    public Direction getDirection() {
+    public Point2D getDirection() {
         return direction;
     }
 
-    public void setDirection(Direction direction) {
+    public void setDirection(Point2D direction) {
         this.direction = direction;
     }
     public Point2D getCenter() {return center;}
@@ -103,10 +104,28 @@ public class SquareModel implements Movable {
 
     @Override
     public void move() {
-
+        Point2D vector = multiplyVector(direction, getSpeed() * dash);
+        setX(getX() + vector.getX());
+        setY(getY() + vector.getY());
     }
 
     public int getLength() {return length;}
 
     public void setLength(int length) {this.length = length;}
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    public boolean isImpact() {
+        return impact;
+    }
+
+    public void setImpact(boolean impact) {
+        this.impact = impact;
+    }
 }

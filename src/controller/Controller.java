@@ -23,7 +23,7 @@ public class Controller {
     public static void createBulletView(int id){
        new BulletView(id);
     }
-    public static void createSquarantineView(int id){
+    public static void createSquareView(int id){
 
         new SquareView(id);
     }
@@ -76,9 +76,10 @@ public class Controller {
                     GameFrame.getINSTANCE().getY() + START_SHRINK_AMOUNT));
             frameWidth -= 2 * START_SHRINK_AMOUNT;
             frameHeight -= 2 * START_SHRINK_AMOUNT;
+            GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
             EpsilonModel.getINSTANCE().setX((double) frameWidth / 2);
             EpsilonModel.getINSTANCE().setY((double) frameHeight / 2);
-            GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
+
         }else{
             firstOfGame = false;
         }

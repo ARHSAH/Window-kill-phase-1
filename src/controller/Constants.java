@@ -20,7 +20,8 @@ public class Constants {
     public static final int FRAME_SHRINK_AMOUNT = 1;
     public static final int FRAME_EXTEND_AMOUNT = 3;
     public static final int UPS = 10;
-    public static final double BALL_SPEED = 7.5;
+    public static final double EPSILON_MAX_SPEED = 5;
+    public static final int  EPSILON_RADIUS = 20;
     public static final double BULLET_SPEED = 10;
     public static final int MINIMUM_FRAME_SIZE = 340;
     public static final int SQUARE_LENGTH = 30;

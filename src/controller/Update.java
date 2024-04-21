@@ -17,13 +17,12 @@ import java.util.ArrayList;
 
 import static controller.Constants.*;
 import static controller.Controller.*;
-import static controller.Utils.multiplyVector;
+import static controller.Utils.*;
 import static controller.Variables.*;
 import static java.nio.file.Files.move;
 import static model.charactersModel.BulletModel.bulletModels;
 import static model.charactersModel.enemies.SquareModel.squareModels;
-import static model.collision.Collision.checkBulletFrame;
-import static model.collision.Collision.checkCircleSquare;
+import static model.collision.Collision.*;
 import static view.charactersView.BulletView.bulletViews;
 import static view.charactersView.enemies.SquareView.squareViews;
 
@@ -77,38 +76,91 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
     public void updateModel(){
         removedSquares = new ArrayList<>();
         removedBullets = new ArrayList<>();
+
+        //EPSILON SQUARE
+        for(SquareModel squareModel : squareModels){
+            Point2D point = collisionCircleSquare(new Point2D.Double(EpsilonModel.getINSTANCE().getX(), EpsilonModel.getINSTANCE().getY()),
+                    EpsilonModel.getINSTANCE().getRadius(), squareModel);
+            if(distance(point,
+                    new Point2D.Double(EpsilonModel.getINSTANCE().getX(), EpsilonModel.getINSTANCE().getY())) <
+            EpsilonModel.getINSTANCE().getRadius()){
+                Point2D effectVector = new Point2D.Double(point.getX() - EpsilonModel.getINSTANCE().getX(),
+                        point.getY() - EpsilonModel.getINSTANCE().getY());
+                Direction directionSquare = new Direction(addVectors(effectVector, squareModel.getDirection()));
+                squareModel.setDirection(directionSquare.getDirectionVector());
+                squareModel.setSpeed(6 + (int)EpsilonModel.getINSTANCE().getSpeed());
+                squareModel.setImpact(true);
+                Direction directionEpsilon = new Direction(addVectors(EpsilonModel.getINSTANCE().
+                        getDirection(), reverseVector(effectVector)));
+                EpsilonModel.getINSTANCE().setDirection(directionEpsilon.getDirectionVector());
+                EpsilonModel.getINSTANCE().setSpeed(EpsilonModel.getINSTANCE().getSpeed() + 0.5);
+                EpsilonModel.getINSTANCE().setImpact(true);
+            }
+        }
+
+        //SQUARE BULLET
         for(SquareModel squareModel : squareModels){
             for(BulletModel bulletModel : bulletModels){
-                if(checkCircleSquare(new Point2D.Double(bulletModel.getX(), bulletModel.getY() ), bulletModel.getRadius(),
-                        new Point2D.Double(squareModel.getX(), squareModel.getY()), squareModel.getLength())){
+                if(distance(collisionCircleSquare(new Point2D.Double(bulletModel.getX(), bulletModel.getY()),
+                                bulletModel.getRadius(), squareModel),
+                        new Point2D.Double(bulletModel.getX(), bulletModel.getY())) <
+                        bulletModel.getRadius()){
                     squareModel.setHp(squareModel.getHp() - 5);
                     removedBullets.add(bulletModel);
                 }
             }
         }
+
+        //BULLET FRAME
+        checkBulletFrame();
+
+        //EPSILON MOVEMENT
+        if(!EpsilonModel.getINSTANCE().isImpact()){
+            Direction direction = new Direction(new Point2D.Double(eUp + eDown, eRight + eLeft));
+            EpsilonModel.getINSTANCE().setDirection(direction.getDirectionVector());
+        }
+
+        //BULLET MOVEMENT
+        for (BulletModel value : bulletModels) {
+            value.move(bulletDirection, Variables.bulletSpeed);
+        }
+
+        //SQUARE MOVEMENT
         for(SquareModel value : squareModels){
             if(value.getHp() > 0) {
-                Direction direction = new Direction(new Point2D.Double(EpsilonModel.getINSTANCE().getX() - value.getX(),
-                        EpsilonModel.getINSTANCE().getY() - value.getY()));
-                value.setDirection(direction);
-                value.move(direction, SQUARE_SPEED);
+                if(!value.isImpact()) {
+                    Direction direction = new Direction(new
+                            Point2D.Double(EpsilonModel.getINSTANCE().getX() - value.getX(),
+                            EpsilonModel.getINSTANCE().getY() - value.getY()));
+                    value.setDirection(direction.getDirectionVector());
+                    if(value.getSpeed() != 0.5){
+                        value.setSpeed(value.getSpeed() + 0.1);
+                    }
+                }else if(value.getSpeed() > 0){
+                    value.setSpeed(value.getSpeed() - 0.5);
+                }else{
+                    value.setImpact(false);
+                }
+                value.move();
             }else{
                 removedSquares.add(value);
             }
         }
+
+        //SQUARE REMOVE
         for(SquareModel value : removedSquares){
             squareModels.remove(value);
         }
+
+        //BULLET REMOVE
         for(BulletModel value : removedBullets){
             value.clip.stop();
             bulletModels.remove(value);
         }
 
-        for (BulletModel value : bulletModels) {
-            value.move(bulletDirection, Variables.bulletSpeed);
-        }
 
-        checkBulletFrame();
+
+
     }
     @Override
     public void keyTyped(KeyEvent e) {
@@ -116,21 +168,19 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
 
     @Override
     public void keyPressed(KeyEvent e) {
+
         if(e.getKeyChar() == 'w'){
-            Direction direction = new Direction(new Point2D.Double(0,-1));
-            EpsilonModel.getINSTANCE().move(direction);
+            eUp = -1;
         }
         if(e.getKeyChar() == 's'){
-            Direction direction = new Direction(new Point2D.Double(0,1));
-            EpsilonModel.getINSTANCE().move(direction);
+            eDown = 1;
         }
         if(e.getKeyChar() == 'a'){
-            Direction direction = new Direction(new Point2D.Double(-1,0));
-            EpsilonModel.getINSTANCE().move(direction);
+            eRight = -1;
         }
         if(e.getKeyChar() == 'd'){
-            Direction direction = new Direction(new Point2D.Double(1,0));
-            EpsilonModel.getINSTANCE().move(direction);
+           eLeft = 1;
+
         }
         if(e.getKeyChar() == 'x'){
             if(bulletTimer > 15) {
@@ -152,7 +202,23 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
 
     @Override
     public void keyReleased(KeyEvent e) {
-        epsilon.setSpeed(0.5);
+        if(e.getKeyChar() == 'w'){
+            eUp = 0;
+            epsilon.setSpeed(0.5);
+        }
+        if(e.getKeyChar() == 's'){
+            eDown = 0;
+            epsilon.setSpeed(0.5);
+        }
+        if(e.getKeyChar() == 'a'){
+            eRight = 0;
+            epsilon.setSpeed(0.5);
+        }
+        if(e.getKeyChar() == 'd'){
+            eLeft = 0;
+            epsilon.setSpeed(0.5);
+        }
+
     }
     @Override
     public void mouseDragged(MouseEvent e) {
