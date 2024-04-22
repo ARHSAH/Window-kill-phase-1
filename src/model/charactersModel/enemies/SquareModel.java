@@ -90,7 +90,8 @@ public class SquareModel implements Movable {
     public void setDirection(Point2D direction) {
         this.direction = direction;
     }
-    public Point2D getCenter() {return center;}
+    public Point2D getCenter() {
+        return new Point2D.Double(x + (double) (length / 2), y + (double) (length / 2));}
 
     public void setCenter(Point2D center) {this.center = center;}
 
@@ -104,6 +105,7 @@ public class SquareModel implements Movable {
 
     @Override
     public void move() {
+
         Point2D vector = multiplyVector(direction, getSpeed() * dash);
         setX(getX() + vector.getX());
         setY(getY() + vector.getY());
@@ -127,5 +129,16 @@ public class SquareModel implements Movable {
 
     public void setImpact(boolean impact) {
         this.impact = impact;
+    }
+    public ArrayList<Point2D> getVertices(){
+        ArrayList<Point2D> vertices = new ArrayList<>();
+        vertices.add(new Point2D.Double(getX(), getY()));
+        vertices.add(new Point2D.Double(getX() + getLength(),
+                getY()));
+        vertices.add(new Point2D.Double(getX() + getLength(),
+                getY() + getLength()));
+        vertices.add(new Point2D.Double(getX(),
+                getY() + getLength()));
+        return vertices;
     }
 }

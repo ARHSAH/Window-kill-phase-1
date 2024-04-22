@@ -24,9 +24,12 @@ public class BulletModel implements Movable {
     public static ArrayList<BulletModel> bulletModels = new ArrayList<>();
     private int id;
     public Clip clip;
+    private int damage;
+    private Point2D direction;
+    private double speed;
 
 
-    public BulletModel(double x , double y, int radius, int damage) {
+    public BulletModel(double x , double y, int radius, int damage,double speed, Point2D direction) {
         try {
             File file = new File("bulletSound.wav");
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
@@ -43,6 +46,9 @@ public class BulletModel implements Movable {
         this.x = x;
         this.y = y;
         this.radius = radius;
+        this.damage = damage;
+        this.speed = speed;
+        this.direction = direction;
         bulletModels.add(this);
         this.id = bulletNumbers;
         createBulletView(id);
@@ -83,9 +89,7 @@ public class BulletModel implements Movable {
 
     @Override
     public void move(Direction direction, double speed) {
-        Point2D vector = multiplyVector(direction.getDirectionVector(), speed);
-        setX(getX() + vector.getX());
-        setY(getY() + vector.getY());
+
     }
 
     @Override
@@ -95,7 +99,40 @@ public class BulletModel implements Movable {
 
     @Override
     public void move() {
-
+        Point2D vector = multiplyVector(direction, speed);
+        setX(getX() + vector.getX());
+        setY(getY() + vector.getY());
     }
 
+    public Clip getClip() {
+        return clip;
+    }
+
+    public void setClip(Clip clip) {
+        this.clip = clip;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
+    public Point2D getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Point2D direction) {
+        this.direction = direction;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
 }

@@ -62,13 +62,17 @@ public class EpsilonModel implements Movable {
                 (direction.getY() > 0 && INSTANCE.getY() < frameHeight - limit - 26 ) ) {
             INSTANCE.setY(INSTANCE.getY() +
                     multiplyVector(direction, INSTANCE.getSpeed()).getY());
-            setEpsilonSpeed();
+            if(!impact) {
+                setEpsilonSpeed();
+            }
         }
         if((direction.getX() < 0 && INSTANCE.getX() > limit) ||
                 (direction.getX() > 0 && INSTANCE.getX() < frameWidth - limit - 10 ) ) {
             INSTANCE.setX(INSTANCE.getX() +
                     multiplyVector(direction, INSTANCE.getSpeed()).getX());
-            setEpsilonSpeed();
+            if(!impact) {
+                setEpsilonSpeed();
+            }
         }
     }
 

@@ -22,7 +22,7 @@ public class Constants {
     public static final int UPS = 10;
     public static final double EPSILON_MAX_SPEED = 5;
     public static final int  EPSILON_RADIUS = 20;
-    public static final double BULLET_SPEED = 10;
+    public static final double BULLET_SPEED = 15;
     public static final int MINIMUM_FRAME_SIZE = 340;
     public static final int SQUARE_LENGTH = 30;
     public static final int BULLET_DAMAGE = 5;

@@ -16,7 +16,7 @@ public class Variables {
     public static int allXp;
     public static int xp = 200;
     public static int frameWidth = 700, frameHeight = 700;
-    public static double bulletSpeed = 10;
+
     public static Point2D mouseLocation;
     public static boolean firstOfGame= true;
 
