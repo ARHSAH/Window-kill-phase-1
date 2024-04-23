@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
+import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 
 import static controller.Constants.FRAME_SHRINK_AMOUNT;
@@ -48,7 +49,12 @@ public class Collision {
         return closestPointOnPolygon(center, vertices);
     }
 
-    public static boolean verticesEpsilonCollision(){
+    public static boolean verticesEpsilonCollision(Point2D point, ArrayList<Point2D> point2DS){
+        for(Point2D value : point2DS) {
+            if (point.distance(value) < 5){
+                return true;
+            }
+        }
         return false;
     }
 

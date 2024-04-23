@@ -33,4 +33,6 @@ public class Variables {
     public static ArrayList<SquareModel> removedSquares;
     public static int eRight, eLeft, eUp, eDown;
     public static boolean a;
+    public static int hp = 100;
+    public static int epsilonVertices = 1;
 }

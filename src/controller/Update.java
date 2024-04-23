@@ -34,7 +34,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
     Timer timer;
     EpsilonModel epsilon = EpsilonModel.getINSTANCE();
     public Update(){
-        xp = 0;
+        xp = 1000;
         timer = new Timer(Constants.UPS, this);
         timer.start();
         GameFrame.getINSTANCE().addKeyListener(this);
@@ -43,6 +43,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
         bulletTimer ++;
         if(frameExtendingTimer < 5 && !frameExtendingDirection.isEmpty()){
             frameExtendingTimer ++;
@@ -58,6 +59,10 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
                     activeGAbility = false;
                 }else{
                     damage = BULLET_DAMAGE + 2;
+                }
+            }else if(activeAbility.equals("aceso")){
+                if (abilityCoolDown % 100 == 0 && abilityCoolDown < 1000 && hp < 100) {
+                    hp ++;
                 }
             }
         }
@@ -78,7 +83,6 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
     }
     public void updateModel(){
 
-
         removedSquares = new ArrayList<>();
         removedBullets = new ArrayList<>();
 
@@ -89,7 +93,19 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
             if(distance(point,
                     new Point2D.Double(EpsilonModel.getINSTANCE().getX(), EpsilonModel.getINSTANCE().getY())) <
             EpsilonModel.getINSTANCE().getRadius()){
-                //if()
+                System.out.println(point.getX());
+                System.out.println(point.getY());
+                System.out.println(EpsilonModel.getINSTANCE().getVertices().get(0).getX());
+                System.out.println(EpsilonModel.getINSTANCE().getVertices().get(0).getY());
+                if(verticesEpsilonCollision(point, squareModel.getVertices()))
+                    {
+                        hp -= squareModel.getDamage();
+                        damageSound();
+                }
+                if(verticesEpsilonCollision(point, EpsilonModel.getINSTANCE().getVertices())) {
+                    squareModel.setHp(squareModel.getHp() - 5);
+                    damageSound();
+                }
                 double epsilonSpeed = EpsilonModel.getINSTANCE().getSpeed();
                 double squareSpeed = squareModel.getSpeed();
                 Point2D effectVector = new Point2D.Double(point.getX() - EpsilonModel.getINSTANCE().getX(),

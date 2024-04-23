@@ -31,6 +31,9 @@ public class Constants {
     public static final double SQUARE_SPEED = 0.2;
     public static final int SQUARE_DAMAGE = 6;
     public static final int TRIANGLE_HP = 15;
+    public static final int VERTICES_DISTANCE = 2;
+    public static final int  VERTICES_RADIUS = 2;
+
 
 
 

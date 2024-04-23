@@ -11,7 +11,6 @@ import static controller.Variables.volume;
 public abstract class Sounds {
     public static void  damageSound(){
         try {
-            System.out.println("salam");
             File file = new File("damage.wav");
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
             Clip clip = AudioSystem.getClip();

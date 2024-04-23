@@ -18,6 +18,8 @@ import static view.charactersView.enemies.SquareView.squareViews;
 
 public class GamePanel extends JPanel {
     private static GamePanel INSTANCE;
+    JLabel hpLabel;
+    ImageIcon heartIcon = new ImageIcon("heartimage.png");
 
     public static GamePanel getINSTANCE() {
         if (INSTANCE == null) {
@@ -35,14 +37,27 @@ public class GamePanel extends JPanel {
         GameFrame.getINSTANCE().getContentPane().add(this);
         GameFrame.getINSTANCE().setVisible(true);
 
+        heartIcon = new ImageIcon("heartimage.png");
+        hpLabel = new JLabel(hp + "");
+        hpLabel.setIcon(heartIcon);
+        hpLabel.setSize(70, 28);
+        hpLabel.setFont(new Font(null, Font.PLAIN,18));
+        hpLabel.setForeground(Color.WHITE);
+        hpLabel.setLocation(0, 0);
+        this.add(hpLabel);
+
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        hpLabel.setIcon(heartIcon);
+        hpLabel.setText(hp + "");
+        hpLabel.setLocation(0, 0);
         g2.setColor(Color.WHITE);
         EpsilonView.getINSTANCE().draw(g2);
+
         for (BulletView value : bulletViews) {
             value.draw(g2);
         }

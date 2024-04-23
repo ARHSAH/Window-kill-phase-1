@@ -5,9 +5,10 @@ import model.movement.Direction;
 import model.movement.Movable;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
-import static controller.Constants.EPSILON_MAX_SPEED;
-import static controller.Constants.EPSILON_RADIUS;
+import static controller.Constants.*;
+import static controller.Constants.VERTICES_RADIUS;
 import static controller.Utils.multiplyVector;
 import static controller.Variables.*;
 
@@ -22,7 +23,7 @@ public class EpsilonModel implements Movable {
 
     private Point2D direction;
     private boolean impact;
-
+    ;
     public static EpsilonModel getINSTANCE() {
         if(INSTANCE == null){
             INSTANCE = new EpsilonModel((double) frameWidth / 2 ,
@@ -133,4 +134,18 @@ public class EpsilonModel implements Movable {
     public void setImpact(boolean impact) {
         this.impact = impact;
     }
+
+    public ArrayList<Point2D> getVertices() {
+        ArrayList<Point2D> vertices = new ArrayList<>();
+        for (int i = 0; i < epsilonVertices ; i++) {
+            int x = (int) (getX() + (radius + VERTICES_DISTANCE) *
+                    Math.cos(2 * Math.PI * i / epsilonVertices) - Math.PI / 2);
+            int y = (int)(getY() + (radius + VERTICES_DISTANCE) *
+                    Math.sin(2 * Math.PI * i / epsilonVertices) - Math.PI / 2);
+            vertices.add(new Point2D.Double(x, y));
+        }
+        return vertices;
+    }
+
+
 }
