@@ -40,7 +40,7 @@ public class BulletModel implements Movable {
             clip.loop(1);
             clip.start();
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         bulletNumbers ++;
         this.x = x;

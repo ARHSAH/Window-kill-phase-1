@@ -10,8 +10,8 @@ import java.util.ArrayList;
 
 
 public class Variables {
-    public static int sensitivity = -80, difficulty = -80,
-            volume = -80;
+    public static int sensitivity = 50, difficulty = 50,
+            volume = 50;
 
     public static int allXp;
     public static int xp = 200;

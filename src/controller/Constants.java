@@ -29,7 +29,7 @@ public class Constants {
     public static final int EPSILON_HP = 100;
     public static final int SQUARE_HP = 10;
     public static final double SQUARE_SPEED = 0.2;
-    public static final int SQUARE_DAMAGE = 10;
+    public static final int SQUARE_DAMAGE = 6;
     public static final int TRIANGLE_HP = 15;
 
 

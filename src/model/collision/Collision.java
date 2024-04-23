@@ -43,9 +43,28 @@ public class Collision {
         }
     }
 
-    public static Point2D collisionCirclePolygon(Point2D.Double center
+    public static Point2D circlePolygonCollision(Point2D.Double center
             , ArrayList<Point2D> vertices) {
         return closestPointOnPolygon(center, vertices);
+    }
+
+    public static boolean verticesEpsilonCollision(){
+        return false;
+    }
+
+    public static Point2D polygonsCollision(ArrayList<Point2D> vertices1, ArrayList<Point2D> vertices2) {
+        for (int i = 0; i < vertices1.size(); i++) {
+            Point2D current = vertices1.get(i);
+            Point2D next = vertices1.get((i + 1) % vertices1.size());
+            for (int j = 0; j < vertices2.size(); j++) {
+                Point2D otherCurrent = vertices2.get(j);
+                Point2D otherNext = vertices2.get((j + 1) % vertices2.size());
+                if (findIntersection(current, next, otherCurrent, otherNext) != null) {
+                    return findIntersection(current, next, otherCurrent, otherNext);
+                }
+            }
+        }
+        return null;
     }
 
     public static Point2D findIntersection(Point2D p1, Point2D q1, Point2D p2, Point2D q2) {
@@ -64,20 +83,6 @@ public class Collision {
                 double x = (B2 * C1 - B1 * C2) / det;
                 double y = (A1 * C2 - A2 * C1) / det;
                 return new Point2D.Double(x, y);
-            }
-        }
-        return null;
-    }
-    public static Point2D polygonsCollision(ArrayList<Point2D> vertices1, ArrayList<Point2D> vertices2) {
-        for (int i = 0; i < vertices1.size(); i++) {
-            Point2D current = vertices1.get(i);
-            Point2D next = vertices1.get((i + 1) % vertices1.size());
-            for (int j = 0; j < vertices2.size(); j++) {
-                Point2D otherCurrent = vertices2.get(j);
-                Point2D otherNext = vertices2.get((j + 1) % vertices2.size());
-                if (findIntersection(current, next, otherCurrent, otherNext) != null) {
-                    return findIntersection(current, next, otherCurrent, otherNext);
-                }
             }
         }
         return null;

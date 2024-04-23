@@ -23,7 +23,7 @@ public class SquareModel implements Movable {
     Point2D direction;
     public static ArrayList<SquareModel> squareModels = new ArrayList<>();
     private boolean impact;
-    int dash = 1;
+    private boolean dash;
     public SquareModel(double x, double y, int length, int hp, int damage, double speed, Point2D direction){
         Variables.squaresNumber ++;
         this.x = x;
@@ -105,8 +105,10 @@ public class SquareModel implements Movable {
 
     @Override
     public void move() {
-
-        Point2D vector = multiplyVector(direction, getSpeed() * dash);
+        if(new Random().nextInt(1, 400) == 5){
+            setSpeed(7);
+        }
+        Point2D vector = multiplyVector(direction, getSpeed());
         setX(getX() + vector.getX());
         setY(getY() + vector.getY());
     }
@@ -130,6 +132,15 @@ public class SquareModel implements Movable {
     public void setImpact(boolean impact) {
         this.impact = impact;
     }
+
+    public boolean isDash() {
+        return dash;
+    }
+
+    public void setDash(boolean dash) {
+        this.dash = dash;
+    }
+
     public ArrayList<Point2D> getVertices(){
         ArrayList<Point2D> vertices = new ArrayList<>();
         vertices.add(new Point2D.Double(getX(), getY()));
@@ -141,4 +152,5 @@ public class SquareModel implements Movable {
                 getY() + getLength()));
         return vertices;
     }
+
 }

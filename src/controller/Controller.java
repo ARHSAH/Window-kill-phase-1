@@ -77,8 +77,8 @@ public class Controller {
             frameWidth -= 2 * START_SHRINK_AMOUNT;
             frameHeight -= 2 * START_SHRINK_AMOUNT;
             GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
-            EpsilonModel.getINSTANCE().setX((double) frameWidth / 2);
-            EpsilonModel.getINSTANCE().setY((double) frameHeight / 2);
+            EpsilonModel.getINSTANCE().setX(170);
+            EpsilonModel.getINSTANCE().setY(170);
 
         }else{
             firstOfGame = false;
