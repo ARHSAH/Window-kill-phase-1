@@ -105,7 +105,7 @@ public class MenuPanel extends JPanel {
         settings.addActionListener(e -> {
             this.setVisible(false);
             INSTANCE = null;
-            SettingPanel.getINSTANCE().setVisible(true);
+            SettingPanel.getINSTANCE();
             MainView.mainPanel.setSize(SETTING_FRAME_WIDTH, SETTING_FRAME_HEIGHT);
             MainView.mainFrame.setSize(SETTING_FRAME_WIDTH,SETTING_FRAME_HEIGHT);
         });

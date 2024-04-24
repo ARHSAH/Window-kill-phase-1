@@ -3,6 +3,7 @@ package controller;
 import model.charactersModel.BulletModel;
 import model.charactersModel.EpsilonModel;
 import model.charactersModel.enemies.SquareModel;
+import model.charactersModel.enemies.TriangleModel;
 import model.collision.Collision;
 import model.movement.Direction;
 import view.charactersView.BulletView;
@@ -23,6 +24,7 @@ import static controller.Variables.*;
 import static java.nio.file.Files.move;
 import static model.charactersModel.BulletModel.bulletModels;
 import static model.charactersModel.enemies.SquareModel.squareModels;
+import static model.charactersModel.enemies.TriangleModel.triangleModels;
 import static model.collision.Collision.*;
 import static model.sounds.Sounds.collapseSound;
 import static model.sounds.Sounds.damageSound;
@@ -35,6 +37,8 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
     EpsilonModel epsilon = EpsilonModel.getINSTANCE();
     public Update(){
         xp = 1000;
+        damage = BULLET_DAMAGE;
+        acesoHp = 0;
         timer = new Timer(Constants.UPS, this);
         timer.start();
         GameFrame.getINSTANCE().addKeyListener(this);
@@ -54,16 +58,17 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
         }
         if(activeGAbility) {
             if (activeAbility.equals("ares")) {
-                if (abilityCoolDown > 1000) {
-                    damage = BULLET_DAMAGE;
-                    activeGAbility = false;
-                }else{
-                    damage = BULLET_DAMAGE + 2;
-                }
+                damage += 2;
+                activeGAbility = false;
             }else if(activeAbility.equals("aceso")){
-                if (abilityCoolDown % 100 == 0 && abilityCoolDown < 1000 && hp < 100) {
-                    hp ++;
+                if (abilityCoolDown % 100 == 0 && abilityCoolDown < 1000 && hp + acesoHp <= 100) {
+                    hp += acesoHp;
+                }else if(abilityCoolDown % 100 == 0 && abilityCoolDown < 1000 && hp + acesoHp > 100){
+                    hp = 100;
                 }
+            }else if(activeAbility.equals("proteus")){
+                epsilonVertices ++;
+                activeGAbility = false;
             }
         }
         abilityCoolDown ++;
@@ -82,7 +87,6 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
         GamePanel.getINSTANCE().revalidate();
     }
     public void updateModel(){
-
         removedSquares = new ArrayList<>();
         removedBullets = new ArrayList<>();
 
@@ -93,17 +97,13 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
             if(distance(point,
                     new Point2D.Double(EpsilonModel.getINSTANCE().getX(), EpsilonModel.getINSTANCE().getY())) <
             EpsilonModel.getINSTANCE().getRadius()){
-                System.out.println(point.getX());
-                System.out.println(point.getY());
-                System.out.println(EpsilonModel.getINSTANCE().getVertices().get(0).getX());
-                System.out.println(EpsilonModel.getINSTANCE().getVertices().get(0).getY());
                 if(verticesEpsilonCollision(point, squareModel.getVertices()))
                     {
                         hp -= squareModel.getDamage();
                         damageSound();
                 }
                 if(verticesEpsilonCollision(point, EpsilonModel.getINSTANCE().getVertices())) {
-                    squareModel.setHp(squareModel.getHp() - 5);
+                    squareModel.setHp(squareModel.getHp() - 10);
                     damageSound();
                 }
                 double epsilonSpeed = EpsilonModel.getINSTANCE().getSpeed();
@@ -129,7 +129,11 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
                                 squareModel.getVertices()),
                         new Point2D.Double(bulletModel.getX(), bulletModel.getY())) <
                         bulletModel.getRadius()){
-                    squareModel.setHp(squareModel.getHp() - BULLET_DAMAGE);
+                    Point2D effectVector = reverseVector(squareModel.getDirection());
+                    squareModel.setImpact(true);
+                    squareModel.setDirection(effectVector);
+                    squareModel.setSpeed(bulletModel.getSpeed() / 5);
+                    squareModel.setHp(squareModel.getHp() - bulletModel.getDamage());
                     damageSound();
                     removedBullets.add(bulletModel);
                 }
@@ -207,6 +211,34 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
             }
         }
 
+        //TRIANGLE MOVEMENT
+        for(TriangleModel value : triangleModels){
+            if(value.getHp() > 0) {
+                if(!value.isImpact()) {
+                    Direction direction = new Direction(new
+                            Point2D.Double(EpsilonModel.getINSTANCE().getX() - value.getA().getX(),
+                            EpsilonModel.getINSTANCE().getY() - value.getA().getY()));
+                    value.setDirection(direction.getDirectionVector());
+                    if(value.getSpeed() < 0.5 ){
+                        value.setSpeed(value.getSpeed() + 0.1);
+                    }else if(value.getCenter().distance(new Point2D.Double(EpsilonModel.getINSTANCE().getX(),
+                            EpsilonModel.getINSTANCE().getY())) > 100){
+                        value.setSpeed(5);
+                    }else{
+                        value.setSpeed(0.5);
+                    }
+
+                }else if(value.getSpeed() > 0){
+                    value.setSpeed(value.getSpeed() - 0.5);
+                }else{
+                    value.setImpact(false);
+                }
+                value.move();
+            }else{
+                removedTriangles.add(value);
+            }
+        }
+
         //SQUARE REMOVE
         for(SquareModel value : removedSquares){
             squareModels.remove(value);
@@ -260,6 +292,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
             xp -= 100;
             activeGAbility = true;
             abilityCoolDown = 0;
+            acesoHp ++;
         }
     }
 

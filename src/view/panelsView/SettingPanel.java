@@ -56,7 +56,7 @@ public class SettingPanel extends JPanel {
         sensitivityLabel.setForeground(Color.WHITE);
         sensitivityLabel.setLocation(65, 94);
 
-        sensitivitySlider = new JSlider(JSlider.HORIZONTAL, 0 , 100, 50);
+        sensitivitySlider = new JSlider(JSlider.HORIZONTAL, 0 , 100, sensitivity);
         sensitivitySlider.setSize(new Dimension(300, 27));
         sensitivitySlider.setLocation(new Point(260,110));
         sensitivitySlider.setBackground(SETTING_SLIDERS_BACKGROUND_COLOR);
@@ -68,7 +68,7 @@ public class SettingPanel extends JPanel {
             settingLabel.revalidate();
         });
 
-        sensitivityPercentLabel = new JLabel(50 + "%");
+        sensitivityPercentLabel = new JLabel(sensitivity + "%");
         sensitivityPercentLabel.setSize(180, 50);
         sensitivityPercentLabel.setFont(new Font(null, Font.PLAIN,27));
         sensitivityPercentLabel.setForeground(Color.WHITE);
@@ -85,7 +85,7 @@ public class SettingPanel extends JPanel {
         difficultyLabel.setForeground(Color.WHITE);
         difficultyLabel.setLocation(65, 194);
 
-        difficultySlider = new JSlider(JSlider.HORIZONTAL, 0 , 100, 50);
+        difficultySlider = new JSlider(JSlider.HORIZONTAL, 0 , 100, difficulty);
         difficultySlider.setSize(new Dimension(300, 27));
         difficultySlider.setLocation(new Point(260,210));
         difficultySlider.setBackground(SETTING_SLIDERS_BACKGROUND_COLOR);
@@ -97,7 +97,7 @@ public class SettingPanel extends JPanel {
             settingLabel.revalidate();
         });
 
-        difficultyPercentLabel = new JLabel(50 + "%");
+        difficultyPercentLabel = new JLabel(difficulty + "%");
         difficultyPercentLabel.setSize(180, 50);
         difficultyPercentLabel.setFont(new Font(null, Font.PLAIN,27));
         difficultyPercentLabel.setForeground(Color.WHITE);
@@ -114,7 +114,7 @@ public class SettingPanel extends JPanel {
         volumeLabel.setForeground(Color.WHITE);
         volumeLabel.setLocation(65, 294);
 
-        volumeSlider = new JSlider(JSlider.HORIZONTAL, 0 , 100, 50);
+        volumeSlider = new JSlider(JSlider.HORIZONTAL, 0 , 100, volume);
         volumeSlider.setSize(new Dimension(300, 27));
         volumeSlider.setLocation(new Point(260,310));
         volumeSlider.setBackground(SETTING_SLIDERS_BACKGROUND_COLOR);
@@ -126,7 +126,7 @@ public class SettingPanel extends JPanel {
             settingLabel.revalidate();
         });
 
-        volumePercentLabel = new JLabel(50 + "%");
+        volumePercentLabel = new JLabel(volume + "%");
         volumePercentLabel.setSize(180, 50);
         volumePercentLabel.setFont(new Font(null, Font.PLAIN,27));
         volumePercentLabel.setForeground(Color.WHITE);
@@ -147,6 +147,7 @@ public class SettingPanel extends JPanel {
         exit.addActionListener(e -> {
             this.setVisible(false);
             MenuPanel.getINSTANCE();
+            INSTANCE = null;
         });
         settingLabel.add(exit);
 

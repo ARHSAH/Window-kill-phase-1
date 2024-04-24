@@ -5,6 +5,7 @@ import java.awt.*;
 
 import static controller.Constants.*;
 import static controller.Variables.activeAbility;
+import static controller.Variables.allXp;
 
 public class SkillTreePanel extends JPanel {
     private static SkillTreePanel INSTANCE;
@@ -17,7 +18,6 @@ public class SkillTreePanel extends JPanel {
 
     private static boolean aresUnlock, acesoUnlock, proteusUnlock;
     private static boolean aresActive, acesoActive, proteusActive;
-    private static int xp = 1500;
     JButton aresButton, acesoButton, proteusButton;
     JLabel attackLabel, defendLabel, shapeLabel;
     JLabel xpLabel;
@@ -39,7 +39,7 @@ public class SkillTreePanel extends JPanel {
         helloSkillTreeLabel.setLocation(250, 0);
         this.add(helloSkillTreeLabel);
 
-        xpLabel = new JLabel(String.valueOf(xp));
+        xpLabel = new JLabel(String.valueOf(allXp));
         ImageIcon xpIcon = new ImageIcon("xpimage.png");
         xpLabel.setIcon(xpIcon);
         xpLabel.setSize(90, 20);
@@ -72,12 +72,12 @@ public class SkillTreePanel extends JPanel {
                         "Sure you want to unlock writ of ares ?", "title",
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (result == JOptionPane.YES_OPTION) {
-                    if (xp > 750) {
+                    if (allXp > 750) {
                         aresUnlock = true;
                         aresButton.setIcon(null);
                         aresButton.setBackground(SKILLTREE_DIACTIVE_BUTTONS_BACKGROUND_COLOR);
-                        xp -= 750;
-                        xpLabel.setText(String.valueOf(xp));
+                        allXp -= 750;
+                        xpLabel.setText(String.valueOf(allXp));
                     }else{
                         JOptionPane.showMessageDialog(null,
                                 "You need 750 xp to buy writ of ares !", "title",
@@ -126,12 +126,12 @@ public class SkillTreePanel extends JPanel {
                         "Sure you want to unlock writ of aceso ?", "title",
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (result == JOptionPane.YES_OPTION) {
-                    if (xp > 500) {
+                    if (allXp > 500) {
                         acesoUnlock = true;
                         acesoButton.setIcon(null);
                         acesoButton.setBackground(SKILLTREE_DIACTIVE_BUTTONS_BACKGROUND_COLOR);
-                        xp -= 500;
-                        xpLabel.setText(String.valueOf(xp));
+                        allXp -= 500;
+                        xpLabel.setText(String.valueOf(allXp));
                     }else{
                         JOptionPane.showMessageDialog(null,
                                 "You need 500 xp to buy writ of aceso !",
@@ -180,12 +180,12 @@ public class SkillTreePanel extends JPanel {
                         "Sure you want to unlock writ of proteus ?", "title",
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (result == JOptionPane.YES_OPTION) {
-                    if (xp > 1000) {
+                    if (allXp > 1000) {
                         proteusUnlock = true;
                         proteusButton.setIcon(null);
                         proteusButton.setBackground(SKILLTREE_DIACTIVE_BUTTONS_BACKGROUND_COLOR);
-                        xp -= 1000;
-                        xpLabel.setText(String.valueOf(xp));
+                        allXp -= 1000;
+                        xpLabel.setText(String.valueOf(allXp));
                     }else{
                         JOptionPane.showMessageDialog(null,
                                 "You need 1000 xp to buy writ of proteus !",

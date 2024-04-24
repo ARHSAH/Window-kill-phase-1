@@ -24,7 +24,7 @@ public class SquareModel implements Movable {
     public static ArrayList<SquareModel> squareModels = new ArrayList<>();
     private boolean impact;
     private boolean dash;
-    public SquareModel(double x, double y, int length, int hp, int damage, double speed, Point2D direction){
+    public SquareModel(double x, double y, int length, int hp, int damage, double speed){
         Variables.squaresNumber ++;
         this.x = x;
         this.y = y;
@@ -32,7 +32,7 @@ public class SquareModel implements Movable {
         this.hp = hp;
         this.damage = damage;
         this.speed = speed;
-        this.direction = direction;
+        direction = new Point2D.Double(0, 0);
         this.id = Variables.squaresNumber;
         center = new Point2D.Double(x + (double) (length / 2), y + (double) (length / 2));
         squareModels.add(this);

@@ -3,9 +3,11 @@ package controller;
 import model.charactersModel.BulletModel;
 import model.charactersModel.EpsilonModel;
 import model.charactersModel.enemies.SquareModel;
+import model.charactersModel.enemies.TriangleModel;
 import view.charactersView.BulletView;
 import view.charactersView.EpsilonView;
 import view.charactersView.enemies.SquareView;
+import view.charactersView.enemies.TriangleView;
 import view.panelsView.GameFrame;
 import view.panelsView.GamePanel;
 
@@ -15,9 +17,11 @@ import static controller.Constants.*;
 import static controller.Variables.*;
 import static model.charactersModel.BulletModel.bulletModels;
 import static model.charactersModel.enemies.SquareModel.squareModels;
+import static model.charactersModel.enemies.TriangleModel.triangleModels;
 import static view.charactersView.BulletView.bulletViews;
 import static view.charactersView.enemies.SquareView.squareViews;
 import static view.charactersView.enemies.SquareView.squareViews;
+import static view.charactersView.enemies.TriangleView.triangleViews;
 
 public class Controller {
     public static void createBulletView(int id){
@@ -26,6 +30,9 @@ public class Controller {
     public static void createSquareView(int id){
 
         new SquareView(id);
+    }
+    public static void createTriangleView(int id){
+        new TriangleView(id);
     }
     public static void setViewLocation(){
         EpsilonView.getINSTANCE().setX(EpsilonModel.getINSTANCE().getX());
@@ -52,6 +59,15 @@ public class Controller {
             value.setY(squareModel.getY());
             value.setLength(squareModel.getLength());
         }
+        for (TriangleView value : triangleViews) {
+            TriangleModel triangleModel = findTriangleModel(value.getId());
+            if(triangleModel == null){
+                triangleViews.remove(value);
+                return;
+            }
+            value.setVertices(triangleModel.getVertices());
+        }
+
     }
     public static BulletModel findBulletModel(int id){
         for (BulletModel value: bulletModels){
@@ -63,6 +79,14 @@ public class Controller {
     }
     public static SquareModel findSquareModel(int id){
         for (SquareModel value: squareModels){
+            if (value.getId() == id){
+                return value;
+            }
+        }
+        return null;
+    }
+    public static TriangleModel findTriangleModel(int id){
+        for (TriangleModel value: triangleModels){
             if (value.getId() == id){
                 return value;
             }
