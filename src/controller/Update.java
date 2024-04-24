@@ -86,23 +86,23 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
         GamePanel.getINSTANCE().repaint();
         GamePanel.getINSTANCE().revalidate();
     }
-    public void updateModel(){
+    public void updateModel() {
         removedSquares = new ArrayList<>();
         removedBullets = new ArrayList<>();
+        removedTriangles = new ArrayList<>();
 
         //EPSILON SQUARE
-        for(SquareModel squareModel : squareModels){
+        for (SquareModel squareModel : squareModels) {
             Point2D point = circlePolygonCollision(new Point2D.Double(EpsilonModel.getINSTANCE().getX(), EpsilonModel.getINSTANCE().getY()),
                     squareModel.getVertices());
-            if(distance(point,
+            if (distance(point,
                     new Point2D.Double(EpsilonModel.getINSTANCE().getX(), EpsilonModel.getINSTANCE().getY())) <
-            EpsilonModel.getINSTANCE().getRadius()){
-                if(verticesEpsilonCollision(point, squareModel.getVertices()))
-                    {
-                        hp -= squareModel.getDamage();
-                        damageSound();
+                    EpsilonModel.getINSTANCE().getRadius()) {
+                if (verticesEpsilonCollision(point, squareModel.getVertices())) {
+                    hp -= squareModel.getDamage();
+                    damageSound();
                 }
-                if(verticesEpsilonCollision(point, EpsilonModel.getINSTANCE().getVertices())) {
+                if (verticesEpsilonCollision(point, EpsilonModel.getINSTANCE().getVertices())) {
                     squareModel.setHp(squareModel.getHp() - 10);
                     damageSound();
                 }
@@ -112,23 +112,54 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
                         point.getY() - EpsilonModel.getINSTANCE().getY());
                 Direction directionSquare = new Direction(addVectors(effectVector, squareModel.getDirection()));
                 squareModel.setDirection(directionSquare.getDirectionVector());
-                squareModel.setSpeed( 3 + squareSpeed + (int)epsilonSpeed);
+                squareModel.setSpeed(3 + squareSpeed + (int) epsilonSpeed);
                 squareModel.setImpact(true);
                 Direction directionEpsilon = new Direction(addVectors(EpsilonModel.getINSTANCE().
                         getDirection(), reverseVector(effectVector)));
                 EpsilonModel.getINSTANCE().setDirection(directionEpsilon.getDirectionVector());
-                EpsilonModel.getINSTANCE().setSpeed( 3 + squareSpeed + (int)epsilonSpeed);
+                EpsilonModel.getINSTANCE().setSpeed(3 + squareSpeed + (int) epsilonSpeed);
+                EpsilonModel.getINSTANCE().setImpact(true);
+            }
+        }
+
+        //EPSILON TRIANGLE
+        for (TriangleModel triangleModel : triangleModels) {
+            Point2D point = circlePolygonCollision(new Point2D.Double(EpsilonModel.getINSTANCE().getX(), EpsilonModel.getINSTANCE().getY()),
+                    triangleModel.getVertices());
+            if (distance(point,
+                    new Point2D.Double(EpsilonModel.getINSTANCE().getX(), EpsilonModel.getINSTANCE().getY())) <
+                    EpsilonModel.getINSTANCE().getRadius()) {
+                if (verticesEpsilonCollision(point, triangleModel.getVertices())) {
+                    hp -= triangleModel.getDamage();
+                    damageSound();
+                }
+                if (verticesEpsilonCollision(point, EpsilonModel.getINSTANCE().getVertices())) {
+                    triangleModel.setHp(triangleModel.getHp() - 10);
+                    damageSound();
+                }
+                double epsilonSpeed = EpsilonModel.getINSTANCE().getSpeed();
+                double triangleSpeed = triangleModel.getSpeed();
+                Point2D effectVector = new Point2D.Double(point.getX() - EpsilonModel.getINSTANCE().getX(),
+                        point.getY() - EpsilonModel.getINSTANCE().getY());
+                Direction directionSquare = new Direction(addVectors(effectVector, triangleModel.getDirection()));
+                triangleModel.setDirection(directionSquare.getDirectionVector());
+                triangleModel.setSpeed(3 + triangleSpeed + (int) epsilonSpeed);
+                triangleModel.setImpact(true);
+                Direction directionEpsilon = new Direction(addVectors(EpsilonModel.getINSTANCE().
+                        getDirection(), reverseVector(effectVector)));
+                EpsilonModel.getINSTANCE().setDirection(directionEpsilon.getDirectionVector());
+                EpsilonModel.getINSTANCE().setSpeed(3 + triangleSpeed + (int) epsilonSpeed);
                 EpsilonModel.getINSTANCE().setImpact(true);
             }
         }
 
         //SQUARE BULLET
-        for(SquareModel squareModel : squareModels){
-            for(BulletModel bulletModel : bulletModels){
-                if(distance(circlePolygonCollision(new Point2D.Double(bulletModel.getX(), bulletModel.getY()),
+        for (SquareModel squareModel : squareModels) {
+            for (BulletModel bulletModel : bulletModels) {
+                if (distance(circlePolygonCollision(new Point2D.Double(bulletModel.getX(), bulletModel.getY()),
                                 squareModel.getVertices()),
                         new Point2D.Double(bulletModel.getX(), bulletModel.getY())) <
-                        bulletModel.getRadius()){
+                        bulletModel.getRadius()) {
                     Point2D effectVector = reverseVector(squareModel.getDirection());
                     squareModel.setImpact(true);
                     squareModel.setDirection(effectVector);
@@ -136,6 +167,47 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
                     squareModel.setHp(squareModel.getHp() - bulletModel.getDamage());
                     damageSound();
                     removedBullets.add(bulletModel);
+                }
+            }
+        }
+
+        //TRIANGLE BULLET
+        for (TriangleModel triangleModel : triangleModels) {
+            for (BulletModel bulletModel : bulletModels) {
+                if (distance(circlePolygonCollision(new Point2D.Double(bulletModel.getX(), bulletModel.getY()),
+                                triangleModel.getVertices()),
+                        new Point2D.Double(bulletModel.getX(), bulletModel.getY())) <
+                        bulletModel.getRadius()) {
+                    Point2D effectVector = reverseVector(triangleModel.getDirection());
+                    triangleModel.setImpact(true);
+                    triangleModel.setDirection(effectVector);
+                    triangleModel.setSpeed(bulletModel.getSpeed() / 5);
+                    triangleModel.setHp(triangleModel.getHp() - bulletModel.getDamage());
+                    damageSound();
+                    removedBullets.add(bulletModel);
+                }
+            }
+        }
+
+        //TRIANGLE SQUARE
+        for (TriangleModel triangleModel : triangleModels) {
+            for (SquareModel squareModel : squareModels) {
+                if (polygonsCollision(triangleModel.getVertices(),
+                        squareModel.getVertices()) != null) {
+                    double speed = triangleModel.getSpeed() + squareModel.getSpeed();
+
+                    Point2D point = polygonsCollision(triangleModel.getVertices(), squareModel.getVertices());
+                    Point2D effectVector = new Point2D.Double(point.getX() -
+                            squareModel.getCenter().getX(),
+                            point.getY() - squareModel.getCenter().getY());
+                    Direction directionTriangle = new Direction(addVectors(effectVector, triangleModel.getDirection()));
+                    triangleModel.setDirection(directionTriangle.getDirectionVector());
+                    triangleModel.setSpeed(speed);
+                    triangleModel.setImpact(true);
+                    Direction directionSquare = new Direction(addVectors(reverseVector(effectVector), squareModel.getDirection()));
+                    squareModel.setDirection(directionSquare.getDirectionVector());
+                    squareModel.setSpeed(speed);
+                    squareModel.setImpact(true);
                 }
             }
         }
@@ -150,7 +222,8 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
                     Point2D point = polygonsCollision(squareModels.get(i).getVertices(), squareModels.get(j).getVertices());
                     Point2D effectVector = new Point2D.Double(point.getX() - squareModels.get(i).getCenter().getX(),
                             point.getY() - squareModels.get(i).getCenter().getY());
-                    Direction directionSquare1 = new Direction(addVectors(effectVector, squareModels.get(j).getDirection()));
+                    Direction directionSquare1 = new Direction(addVectors(effectVector,
+                            squareModels.get(j).getDirection()));
                     squareModels.get(j).setDirection(directionSquare1.getDirectionVector());
                     squareModels.get(j).setSpeed(speedI + 1);
                     squareModels.get(j).setImpact(true);
@@ -158,6 +231,28 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
                     squareModels.get(i).setDirection(directionSquare.getDirectionVector());
                     squareModels.get(i).setSpeed(speedJ + 1);
                     squareModels.get(i).setImpact(true);
+                }
+            }
+        }
+
+        //TRIANGLE TRIANGLE
+        for(int i = 0 ; i < triangleModels.size() ; i++){
+            assert i + 1 != (triangleModels.size() - 1);
+            for(int j = i + 1 ; j < triangleModels.size() ; j++){
+                if(polygonsCollision(triangleModels.get(i).getVertices(), triangleModels.get(j).getVertices()) != null){
+                    double speedI = triangleModels.get(i).getSpeed();
+                    double speedJ = triangleModels.get(j).getSpeed();
+                    Point2D point = polygonsCollision(triangleModels.get(i).getVertices(), triangleModels.get(j).getVertices());
+                    Point2D effectVector = new Point2D.Double(point.getX() - triangleModels.get(i).getCenter().getX(),
+                            point.getY() - triangleModels.get(i).getCenter().getY());
+                    Direction directionSquare1 = new Direction(addVectors(effectVector, triangleModels.get(j).getDirection()));
+                    triangleModels.get(j).setDirection(directionSquare1.getDirectionVector());
+                    triangleModels.get(j).setSpeed(speedI + 1);
+                    triangleModels.get(j).setImpact(true);
+                    Direction directionSquare = new Direction(addVectors(reverseVector(effectVector), triangleModels.get(j).getDirection()));
+                    triangleModels.get(i).setDirection(directionSquare.getDirectionVector());
+                    triangleModels.get(i).setSpeed(speedJ + 1);
+                    triangleModels.get(i).setImpact(true);
                 }
             }
         }
@@ -222,7 +317,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
                     if(value.getSpeed() < 0.5 ){
                         value.setSpeed(value.getSpeed() + 0.1);
                     }else if(value.getCenter().distance(new Point2D.Double(EpsilonModel.getINSTANCE().getX(),
-                            EpsilonModel.getINSTANCE().getY())) > 100){
+                            EpsilonModel.getINSTANCE().getY())) > 130){
                         value.setSpeed(5);
                     }else{
                         value.setSpeed(0.5);
@@ -242,6 +337,12 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
         //SQUARE REMOVE
         for(SquareModel value : removedSquares){
             squareModels.remove(value);
+            collapseSound();
+        }
+
+        //TRIANGLE REMOVE
+        for(TriangleModel value : removedTriangles){
+            triangleModels.remove(value);
             collapseSound();
         }
 

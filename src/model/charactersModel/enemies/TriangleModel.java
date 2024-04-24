@@ -48,9 +48,7 @@ public class TriangleModel implements Movable {
     @Override
     public void move() {
         Point2D vector = multiplyVector(direction, getSpeed());
-        System.out.println(vector.getX());
         setA(new Point2D.Double(getA().getX() + vector.getX(), getA().getY() + vector.getY() ));
-        System.out.println(getA());
     }
     public ArrayList<Point2D> getVertices(){
         ArrayList<Point2D> vertices = new ArrayList<>();

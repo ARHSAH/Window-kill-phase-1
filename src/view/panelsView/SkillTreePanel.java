@@ -72,7 +72,7 @@ public class SkillTreePanel extends JPanel {
                         "Sure you want to unlock writ of ares ?", "title",
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (result == JOptionPane.YES_OPTION) {
-                    if (allXp > 750) {
+                    if (allXp >= 750) {
                         aresUnlock = true;
                         aresButton.setIcon(null);
                         aresButton.setBackground(SKILLTREE_DIACTIVE_BUTTONS_BACKGROUND_COLOR);
@@ -126,7 +126,7 @@ public class SkillTreePanel extends JPanel {
                         "Sure you want to unlock writ of aceso ?", "title",
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (result == JOptionPane.YES_OPTION) {
-                    if (allXp > 500) {
+                    if (allXp >= 500) {
                         acesoUnlock = true;
                         acesoButton.setIcon(null);
                         acesoButton.setBackground(SKILLTREE_DIACTIVE_BUTTONS_BACKGROUND_COLOR);
@@ -180,7 +180,7 @@ public class SkillTreePanel extends JPanel {
                         "Sure you want to unlock writ of proteus ?", "title",
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (result == JOptionPane.YES_OPTION) {
-                    if (allXp > 1000) {
+                    if (allXp >= 1000) {
                         proteusUnlock = true;
                         proteusButton.setIcon(null);
                         proteusButton.setBackground(SKILLTREE_DIACTIVE_BUTTONS_BACKGROUND_COLOR);
