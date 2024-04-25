@@ -146,6 +146,9 @@ public class EpsilonModel implements Movable {
         }
         return vertices;
     }
+    public Point2D getCenter(){
+        return new Point2D.Double(getX(), getY());
+    }
 
 
 }

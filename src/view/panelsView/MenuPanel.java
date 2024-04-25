@@ -106,8 +106,7 @@ public class MenuPanel extends JPanel {
             this.setVisible(false);
             INSTANCE = null;
             SettingPanel.getINSTANCE();
-            MainView.mainPanel.setSize(SETTING_FRAME_WIDTH, SETTING_FRAME_HEIGHT);
-            MainView.mainFrame.setSize(SETTING_FRAME_WIDTH,SETTING_FRAME_HEIGHT);
+
         });
         menuLabel.add(settings);
 
@@ -120,6 +119,9 @@ public class MenuPanel extends JPanel {
         tutorial.setFocusable(false);
         tutorial.setFont(new Font(null,Font.PLAIN, 20));
         tutorial.addActionListener(e -> {
+            this.setVisible(false);
+            INSTANCE = null;
+            TutorialPanel.getINSTANCE();
 
         });
         menuLabel.add(tutorial);

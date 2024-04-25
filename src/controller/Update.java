@@ -74,7 +74,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
         abilityCoolDown ++;
         if(!firstOfGame) {
             updateModel();
-            if(elapsedTime % 20 == 0){
+            if(elapsedTime % 10 == 0){
                 gameShrinkage();
             }
         }
@@ -123,6 +123,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
                 EpsilonModel.getINSTANCE().setDirection(directionEpsilon.getDirectionVector());
                 EpsilonModel.getINSTANCE().setSpeed(3 + squareSpeed + (int) epsilonSpeed);
                 EpsilonModel.getINSTANCE().setImpact(true);
+                impact(point);
             }
         }
 
@@ -154,6 +155,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
                 EpsilonModel.getINSTANCE().setDirection(directionEpsilon.getDirectionVector());
                 EpsilonModel.getINSTANCE().setSpeed(3 + triangleSpeed + (int) epsilonSpeed);
                 EpsilonModel.getINSTANCE().setImpact(true);
+                impact(point);
             }
         }
 
@@ -212,6 +214,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
                     squareModel.setDirection(directionSquare.getDirectionVector());
                     squareModel.setSpeed(1 + speedT);
                     squareModel.setImpact(true);
+                    impact(point);
                 }
             }
         }
@@ -235,6 +238,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
                     squareModels.get(i).setDirection(directionSquare.getDirectionVector());
                     squareModels.get(i).setSpeed(speedJ + 1);
                     squareModels.get(i).setImpact(true);
+                    impact(point);
                 }
             }
         }
@@ -257,6 +261,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
                     triangleModels.get(i).setDirection(directionSquare.getDirectionVector());
                     triangleModels.get(i).setSpeed(speedJ + 1);
                     triangleModels.get(i).setImpact(true);
+                    impact(point);
                 }
             }
         }

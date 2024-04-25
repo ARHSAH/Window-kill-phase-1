@@ -8,6 +8,8 @@ public class Constants {
     public static final int SETTING_FRAME_HEIGHT = 500;
     public static final int SKILLTREE_FRAME_WIDTH = 700;
     public static final int SKILLTREE_FRAME_HEIGHT = 500;
+    public static final int TUTORIAL_FRAME_WIDTH = 700;
+    public static final int TUTORIAL_FRAME_HEIGHT = 550;
     public static final Color MENU_BUTTON_BACKGROUND_COLOR = Color.red;
     public static final Color MENU_BUTTON_FOREGROUND_COLOR = Color.BLACK;
 

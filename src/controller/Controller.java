@@ -4,6 +4,7 @@ import model.charactersModel.BulletModel;
 import model.charactersModel.EpsilonModel;
 import model.charactersModel.enemies.SquareModel;
 import model.charactersModel.enemies.TriangleModel;
+import model.movement.Direction;
 import view.charactersView.BulletView;
 import view.charactersView.EpsilonView;
 import view.charactersView.enemies.SquareView;
@@ -12,8 +13,11 @@ import view.panelsView.GameFrame;
 import view.panelsView.GamePanel;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 import static controller.Constants.*;
+import static controller.Utils.addVectors;
+import static controller.Utils.reverseVector;
 import static controller.Variables.*;
 import static model.charactersModel.BulletModel.bulletModels;
 import static model.charactersModel.enemies.SquareModel.squareModels;
@@ -128,6 +132,41 @@ public class Controller {
             frameHeight -= 2 * FRAME_SHRINK_AMOUNT;
             GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
         }
+    }
+
+    public static void impact(Point2D point){
+        if(EpsilonModel.getINSTANCE().getCenter().distance(point) > 50 &&
+                EpsilonModel.getINSTANCE().getCenter().distance(point) < 130){
+            Point2D effectVector = new Point2D.Double(point.getX() - EpsilonModel.getINSTANCE().getCenter().getX(),
+                    point.getY() - EpsilonModel.getINSTANCE().getCenter().getY());
+            Direction directionEpsilon = new Direction(reverseVector(effectVector));
+            EpsilonModel.getINSTANCE().setDirection(directionEpsilon.getDirectionVector());
+            EpsilonModel.getINSTANCE().setSpeed(3 + EpsilonModel.getINSTANCE().getSpeed());
+            EpsilonModel.getINSTANCE().setImpact(true);
+        }
+        for(SquareModel squareModel : squareModels){
+            if(squareModel.getCenter().distance(point) > 50 &&
+            squareModel.getCenter().distance(point) < 200){
+                Point2D effectVector = new Point2D.Double(point.getX() - squareModel.getCenter().getX(),
+                        point.getY() - squareModel.getCenter().getY());
+                Direction directionSquare = new Direction(reverseVector(effectVector));
+                squareModel.setDirection(directionSquare.getDirectionVector());
+                squareModel.setSpeed(3 + squareModel.getSpeed());
+                squareModel.setImpact(true);
+            }
+        }
+        for(TriangleModel triangleModel : triangleModels){
+            if(triangleModel.getCenter().distance(point) > 50 &&
+                    triangleModel.getCenter().distance(point) < 130){
+                Point2D effectVector = new Point2D.Double(point.getX() - triangleModel.getCenter().getX(),
+                        point.getY() - triangleModel.getCenter().getY());
+                Direction directionSquare = new Direction(reverseVector(effectVector));
+                triangleModel.setDirection(directionSquare.getDirectionVector());
+                triangleModel.setSpeed(3 + triangleModel.getSpeed());
+                triangleModel.setImpact(true);
+            }
+        }
+
     }
 
     public static void frameExtending(String direction) {
