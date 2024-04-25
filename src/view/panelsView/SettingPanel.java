@@ -61,6 +61,7 @@ public class SettingPanel extends JPanel {
         sensitivitySlider.setLocation(new Point(260,110));
         sensitivitySlider.setBackground(SETTING_SLIDERS_BACKGROUND_COLOR);
         sensitivitySlider.setForeground(SETTING_SLIDERS_FOREGROUND_COLOR);
+        sensitivitySlider.setFocusable(false);
         sensitivitySlider.addChangeListener(e -> {
             sensitivity = sensitivitySlider.getValue();
             sensitivityPercentLabel.setText(sensitivity + "%");
@@ -90,6 +91,7 @@ public class SettingPanel extends JPanel {
         difficultySlider.setLocation(new Point(260,210));
         difficultySlider.setBackground(SETTING_SLIDERS_BACKGROUND_COLOR);
         difficultySlider.setForeground(SETTING_SLIDERS_FOREGROUND_COLOR);
+        difficultySlider.setFocusable(false);
         difficultySlider.addChangeListener(e -> {
             difficulty = difficultySlider.getValue();
             difficultyPercentLabel.setText(difficulty + "%");
@@ -119,6 +121,7 @@ public class SettingPanel extends JPanel {
         volumeSlider.setLocation(new Point(260,310));
         volumeSlider.setBackground(SETTING_SLIDERS_BACKGROUND_COLOR);
         volumeSlider.setForeground(SETTING_SLIDERS_FOREGROUND_COLOR);
+        volumeSlider.setFocusable(false);
         volumeSlider.addChangeListener(e -> {
             volume = volumeSlider.getValue();
             volumePercentLabel.setText(volume + "%");

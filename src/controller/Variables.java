@@ -39,4 +39,6 @@ public class Variables {
     public static int epsilonVertices = 0;
     public static int triangleNumbers = 0;
     public static int acesoHp = 0;
+    public static int wave = 1;
+    public static int elapsedTime, minutes1, minutes2, seconds1, seconds2;
 }

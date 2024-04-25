@@ -24,23 +24,26 @@ import static view.charactersView.enemies.SquareView.squareViews;
 import static view.charactersView.enemies.TriangleView.triangleViews;
 
 public class Controller {
-    public static void createBulletView(int id){
-       new BulletView(id);
+    public static void createBulletView(int id) {
+        new BulletView(id);
     }
-    public static void createSquareView(int id){
+
+    public static void createSquareView(int id) {
 
         new SquareView(id);
     }
-    public static void createTriangleView(int id){
+
+    public static void createTriangleView(int id) {
         new TriangleView(id);
     }
-    public static void setViewLocation(){
+
+    public static void setViewLocation() {
         EpsilonView.getINSTANCE().setX(EpsilonModel.getINSTANCE().getX());
         EpsilonView.getINSTANCE().setY(EpsilonModel.getINSTANCE().getY());
         EpsilonView.getINSTANCE().setRadius(EpsilonModel.getINSTANCE().getRadius());
         for (BulletView value : bulletViews) {
             BulletModel bulletModel = findBulletModel(value.getId());
-            if(bulletModel == null){
+            if (bulletModel == null) {
                 bulletViews.remove(value);
                 return;
             }
@@ -51,7 +54,7 @@ public class Controller {
 
         for (SquareView value : squareViews) {
             SquareModel squareModel = findSquareModel(value.getId());
-            if(squareModel == null){
+            if (squareModel == null) {
                 squareViews.remove(value);
                 return;
             }
@@ -61,7 +64,7 @@ public class Controller {
         }
         for (TriangleView value : triangleViews) {
             TriangleModel triangleModel = findTriangleModel(value.getId());
-            if(triangleModel == null){
+            if (triangleModel == null) {
                 triangleViews.remove(value);
                 return;
             }
@@ -69,33 +72,36 @@ public class Controller {
         }
 
     }
-    public static BulletModel findBulletModel(int id){
-        for (BulletModel value: bulletModels){
-            if (value.getId() == id){
-                return value;
-            }
-        }
-        return null;
-    }
-    public static SquareModel findSquareModel(int id){
-        for (SquareModel value: squareModels){
-            if (value.getId() == id){
-                return value;
-            }
-        }
-        return null;
-    }
-    public static TriangleModel findTriangleModel(int id){
-        for (TriangleModel value: triangleModels){
-            if (value.getId() == id){
+
+    public static BulletModel findBulletModel(int id) {
+        for (BulletModel value : bulletModels) {
+            if (value.getId() == id) {
                 return value;
             }
         }
         return null;
     }
 
-    public static void startShrinkage(){
-        if(frameHeight > MINIMUM_FRAME_SIZE && frameWidth > MINIMUM_FRAME_SIZE){
+    public static SquareModel findSquareModel(int id) {
+        for (SquareModel value : squareModels) {
+            if (value.getId() == id) {
+                return value;
+            }
+        }
+        return null;
+    }
+
+    public static TriangleModel findTriangleModel(int id) {
+        for (TriangleModel value : triangleModels) {
+            if (value.getId() == id) {
+                return value;
+            }
+        }
+        return null;
+    }
+
+    public static void startShrinkage() {
+        if (frameHeight > MINIMUM_FRAME_SIZE && frameWidth > MINIMUM_FRAME_SIZE) {
             GameFrame.getINSTANCE().setLocation(new Point(GameFrame.getINSTANCE().getX() + START_SHRINK_AMOUNT,
                     GameFrame.getINSTANCE().getY() + START_SHRINK_AMOUNT));
             frameWidth -= 2 * START_SHRINK_AMOUNT;
@@ -103,47 +109,60 @@ public class Controller {
             GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
             EpsilonModel.getINSTANCE().setX(170);
             EpsilonModel.getINSTANCE().setY(170);
-
-        }else{
+        } else {
             firstOfGame = false;
         }
     }
 
-    public static void gameShrinkage(){
-        if(frameHeight > MINIMUM_FRAME_SIZE){
-            
+    public static void gameShrinkage() {
+        if (frameWidth > MINIMUM_FRAME_SIZE) {
+            GameFrame.getINSTANCE().setLocation(new Point(GameFrame.getINSTANCE().getX() +
+                    FRAME_SHRINK_AMOUNT,
+                    GameFrame.getINSTANCE().getY()));
+            frameWidth -= 2 * FRAME_SHRINK_AMOUNT;
+            GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
+        }
+        if (frameHeight > MINIMUM_FRAME_SIZE) {
+            GameFrame.getINSTANCE().setLocation(new Point(GameFrame.getINSTANCE().getX(),
+                    GameFrame.getINSTANCE().getY() + FRAME_SHRINK_AMOUNT));
+            frameHeight -= 2 * FRAME_SHRINK_AMOUNT;
+            GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
         }
     }
 
-    public static void frameExtending(String direction){
-            if (direction.equals("right")) {
-                GameFrame.getINSTANCE().setLocation(new Point(
-                        GameFrame.getINSTANCE().getX() + FRAME_SHRINK_AMOUNT,
-                        GameFrame.getINSTANCE().getY()));
-                frameWidth += 2 * FRAME_SHRINK_AMOUNT;
-                GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
-            }
-            else if (direction.equals("left")) {
-                GameFrame.getINSTANCE().setLocation(new Point(
+    public static void frameExtending(String direction) {
+        if (direction.equals("right")) {
+            GameFrame.getINSTANCE().setLocation(new Point(
+                    GameFrame.getINSTANCE().getX() + FRAME_SHRINK_AMOUNT,
+                    GameFrame.getINSTANCE().getY()));
+            frameWidth += 2 * FRAME_SHRINK_AMOUNT;
+            GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
+        } else if (direction.equals("left")) {
+            GameFrame.getINSTANCE().setLocation(new Point(
                     GameFrame.getINSTANCE().getX() - 3 * FRAME_SHRINK_AMOUNT,
                     GameFrame.getINSTANCE().getY()));
-                frameWidth += 2 * FRAME_SHRINK_AMOUNT;
-                GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
-            }
-            else if (direction.equals("bottom")) {
-                GameFrame.getINSTANCE().setLocation(new Point(
-                        GameFrame.getINSTANCE().getX(),
-                        GameFrame.getINSTANCE().getY() + FRAME_SHRINK_AMOUNT));
-                frameHeight += 2 * FRAME_SHRINK_AMOUNT;
-                GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
-            }
-            else if(direction.equals("top")){
-                GameFrame.getINSTANCE().setLocation(new Point(
-                        GameFrame.getINSTANCE().getX(),
-                        GameFrame.getINSTANCE().getY() - 3 * FRAME_SHRINK_AMOUNT));
-                frameHeight += 2 * FRAME_SHRINK_AMOUNT;
-                GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
-            }
-          GamePanel.getINSTANCE().setSize(frameWidth, frameHeight);
+            frameWidth += 2 * FRAME_SHRINK_AMOUNT;
+            GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
+        } else if (direction.equals("bottom")) {
+            GameFrame.getINSTANCE().setLocation(new Point(
+                    GameFrame.getINSTANCE().getX(),
+                    GameFrame.getINSTANCE().getY() + FRAME_SHRINK_AMOUNT));
+            frameHeight += 2 * FRAME_SHRINK_AMOUNT;
+            GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
+        } else if (direction.equals("top")) {
+            GameFrame.getINSTANCE().setLocation(new Point(
+                    GameFrame.getINSTANCE().getX(),
+                    GameFrame.getINSTANCE().getY() - 3 * FRAME_SHRINK_AMOUNT));
+            frameHeight += 2 * FRAME_SHRINK_AMOUNT;
+            GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
         }
+        GamePanel.getINSTANCE().setSize(frameWidth, frameHeight);
     }
+
+    public static void updateTimer() {
+        minutes1 = ((elapsedTime / 60) / 60) / 10;
+        minutes2 = ((elapsedTime / 60) / 60) % 10;
+        seconds1 = ((elapsedTime / 60) / 10) % 6;
+        seconds2 = (elapsedTime / 60) % 10 ;
+    }
+}

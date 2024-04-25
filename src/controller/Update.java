@@ -36,7 +36,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
     Timer timer;
     EpsilonModel epsilon = EpsilonModel.getINSTANCE();
     public Update(){
-        xp = 1000;
+        xp = 0;
         damage = BULLET_DAMAGE;
         acesoHp = 0;
         timer = new Timer(Constants.UPS, this);
@@ -47,7 +47,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        elapsedTime ++;
         bulletTimer ++;
         if(frameExtendingTimer < 5 && !frameExtendingDirection.isEmpty()){
             frameExtendingTimer ++;
@@ -61,9 +61,9 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
                 damage += 2;
                 activeGAbility = false;
             }else if(activeAbility.equals("aceso")){
-                if (abilityCoolDown % 100 == 0 && abilityCoolDown < 1000 && hp + acesoHp <= 100) {
+                if (abilityCoolDown % 100 == 0 && hp + acesoHp <= 100) {
                     hp += acesoHp;
-                }else if(abilityCoolDown % 100 == 0 && abilityCoolDown < 1000 && hp + acesoHp > 100){
+                }else if(abilityCoolDown % 100 == 0 && hp + acesoHp > 100){
                     hp = 100;
                 }
             }else if(activeAbility.equals("proteus")){
@@ -74,6 +74,9 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
         abilityCoolDown ++;
         if(!firstOfGame) {
             updateModel();
+            if(elapsedTime % 20 == 0){
+                gameShrinkage();
+            }
         }
         updateView();
     }
@@ -82,6 +85,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
         if(firstOfGame){
             startShrinkage();
         }
+        updateTimer();
         setViewLocation();
         GamePanel.getINSTANCE().repaint();
         GamePanel.getINSTANCE().revalidate();
@@ -194,19 +198,19 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
             for (SquareModel squareModel : squareModels) {
                 if (polygonsCollision(triangleModel.getVertices(),
                         squareModel.getVertices()) != null) {
-                    double speed = triangleModel.getSpeed() + squareModel.getSpeed();
-
+                    int speedT = (int) triangleModel.getSpeed();
+                    int speedS = (int)squareModel.getSpeed();
                     Point2D point = polygonsCollision(triangleModel.getVertices(), squareModel.getVertices());
                     Point2D effectVector = new Point2D.Double(point.getX() -
                             squareModel.getCenter().getX(),
                             point.getY() - squareModel.getCenter().getY());
                     Direction directionTriangle = new Direction(addVectors(effectVector, triangleModel.getDirection()));
                     triangleModel.setDirection(directionTriangle.getDirectionVector());
-                    triangleModel.setSpeed(speed);
+                    triangleModel.setSpeed(1 + speedS);
                     triangleModel.setImpact(true);
                     Direction directionSquare = new Direction(addVectors(reverseVector(effectVector), squareModel.getDirection()));
                     squareModel.setDirection(directionSquare.getDirectionVector());
-                    squareModel.setSpeed(speed);
+                    squareModel.setSpeed(1 + speedT);
                     squareModel.setImpact(true);
                 }
             }
@@ -362,7 +366,6 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
 
     @Override
     public void keyPressed(KeyEvent e) {
-
         if(e.getKeyChar() == 'w'){
             eUp = -1;
         }
