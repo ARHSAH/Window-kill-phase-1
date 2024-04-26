@@ -39,6 +39,7 @@ public class Constants {
 
     public static final int VERTICES_DISTANCE = 2;
     public static final int  VERTICES_RADIUS = 2;
+    public static final int  COLLECTIBLE_RADIUS = 4;
 
 
 

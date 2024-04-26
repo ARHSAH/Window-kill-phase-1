@@ -1,11 +1,13 @@
 package controller;
 
 import model.charactersModel.BulletModel;
+import model.charactersModel.CollectibleModel;
 import model.charactersModel.EpsilonModel;
 import model.charactersModel.enemies.SquareModel;
 import model.charactersModel.enemies.TriangleModel;
 import model.movement.Direction;
 import view.charactersView.BulletView;
+import view.charactersView.CollectibleView;
 import view.charactersView.EpsilonView;
 import view.charactersView.enemies.SquareView;
 import view.charactersView.enemies.TriangleView;
@@ -14,15 +16,20 @@ import view.panelsView.GamePanel;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.util.Objects;
+import java.util.Random;
 
 import static controller.Constants.*;
 import static controller.Utils.addVectors;
 import static controller.Utils.reverseVector;
 import static controller.Variables.*;
 import static model.charactersModel.BulletModel.bulletModels;
+import static model.charactersModel.CollectibleModel.collectibleModels;
 import static model.charactersModel.enemies.SquareModel.squareModels;
 import static model.charactersModel.enemies.TriangleModel.triangleModels;
+import static model.sounds.Sounds.enemySpawnSound;
 import static view.charactersView.BulletView.bulletViews;
+import static view.charactersView.CollectibleView.collectibleViews;
 import static view.charactersView.enemies.SquareView.squareViews;
 import static view.charactersView.enemies.SquareView.squareViews;
 import static view.charactersView.enemies.TriangleView.triangleViews;
@@ -39,6 +46,9 @@ public class Controller {
 
     public static void createTriangleView(int id) {
         new TriangleView(id);
+    }
+    public static void createCollectibleView(int id) {
+        new CollectibleView(id);
     }
 
     public static void setViewLocation() {
@@ -74,6 +84,15 @@ public class Controller {
             }
             value.setVertices(triangleModel.getVertices());
         }
+        for (CollectibleView value : collectibleViews) {
+           CollectibleModel collectibleModel = findCollectibleModel(value.getId());
+            if (collectibleModel == null) {
+                collectibleViews.remove(value);
+                return;
+            }
+            value.setCenter(collectibleModel.getCenter());
+            value.setRadius(collectibleModel.getRadius());
+        }
 
     }
 
@@ -103,6 +122,14 @@ public class Controller {
         }
         return null;
     }
+    public static CollectibleModel findCollectibleModel(int id) {
+        for (CollectibleModel value : collectibleModels) {
+            if (value.getId() == id) {
+                return value;
+            }
+        }
+        return null;
+    }
 
     public static void startShrinkage() {
         if (frameHeight > MINIMUM_FRAME_SIZE && frameWidth > MINIMUM_FRAME_SIZE) {
@@ -110,7 +137,7 @@ public class Controller {
                     GameFrame.getINSTANCE().getY() + START_SHRINK_AMOUNT));
             frameWidth -= 2 * START_SHRINK_AMOUNT;
             frameHeight -= 2 * START_SHRINK_AMOUNT;
-            GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
+            GameFrame.getINSTANCE().setSize(new Dimension((int)frameWidth, (int)frameHeight));
             EpsilonModel.getINSTANCE().setX(170);
             EpsilonModel.getINSTANCE().setY(170);
         } else {
@@ -119,18 +146,20 @@ public class Controller {
     }
 
     public static void gameShrinkage() {
-        if (frameWidth > MINIMUM_FRAME_SIZE) {
-            GameFrame.getINSTANCE().setLocation(new Point(GameFrame.getINSTANCE().getX() +
-                    FRAME_SHRINK_AMOUNT,
-                    GameFrame.getINSTANCE().getY()));
-            frameWidth -= 2 * FRAME_SHRINK_AMOUNT;
-            GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
-        }
-        if (frameHeight > MINIMUM_FRAME_SIZE) {
-            GameFrame.getINSTANCE().setLocation(new Point(GameFrame.getINSTANCE().getX(),
-                    GameFrame.getINSTANCE().getY() + FRAME_SHRINK_AMOUNT));
-            frameHeight -= 2 * FRAME_SHRINK_AMOUNT;
-            GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
+        if(waveTimer > 500) {
+            if (frameWidth > MINIMUM_FRAME_SIZE && !frameExtendingDirection.equals("left") && !frameExtendingDirection.equals("right")) {
+                GameFrame.getINSTANCE().setLocation(new Point(GameFrame.getINSTANCE().getX() +
+                        frameShrinkAmount,
+                        GameFrame.getINSTANCE().getY()));
+                frameWidth -= 2 * frameShrinkAmount;
+                GameFrame.getINSTANCE().setSize(new Dimension((int) frameWidth, (int) frameHeight));
+            }
+            if (frameHeight > MINIMUM_FRAME_SIZE && !frameExtendingDirection.equals("top") && !frameExtendingDirection.equals("bottom")) {
+                GameFrame.getINSTANCE().setLocation(new Point(GameFrame.getINSTANCE().getX(),
+                        GameFrame.getINSTANCE().getY() + frameShrinkAmount));
+                frameHeight -= 2 * frameShrinkAmount;
+                GameFrame.getINSTANCE().setSize(new Dimension((int) frameWidth, (int) frameHeight));
+            }
         }
     }
 
@@ -175,27 +204,24 @@ public class Controller {
                     GameFrame.getINSTANCE().getX() + FRAME_SHRINK_AMOUNT,
                     GameFrame.getINSTANCE().getY()));
             frameWidth += 2 * FRAME_SHRINK_AMOUNT;
-            GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
         } else if (direction.equals("left")) {
             GameFrame.getINSTANCE().setLocation(new Point(
                     GameFrame.getINSTANCE().getX() - 3 * FRAME_SHRINK_AMOUNT,
                     GameFrame.getINSTANCE().getY()));
             frameWidth += 2 * FRAME_SHRINK_AMOUNT;
-            GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
         } else if (direction.equals("bottom")) {
             GameFrame.getINSTANCE().setLocation(new Point(
                     GameFrame.getINSTANCE().getX(),
                     GameFrame.getINSTANCE().getY() + FRAME_SHRINK_AMOUNT));
             frameHeight += 2 * FRAME_SHRINK_AMOUNT;
-            GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
         } else if (direction.equals("top")) {
             GameFrame.getINSTANCE().setLocation(new Point(
                     GameFrame.getINSTANCE().getX(),
                     GameFrame.getINSTANCE().getY() - 3 * FRAME_SHRINK_AMOUNT));
-            frameHeight += 2 * FRAME_SHRINK_AMOUNT;
-            GameFrame.getINSTANCE().setSize(new Dimension(frameWidth, frameHeight));
+            frameHeight += 2 * FRAME_SHRINK_AMOUNT;;
         }
-        GamePanel.getINSTANCE().setSize(frameWidth, frameHeight);
+        GameFrame.getINSTANCE().setSize((int)frameWidth, (int)frameHeight);
+        GamePanel.getINSTANCE().setSize((int)frameWidth, (int)frameHeight);
     }
 
     public static void updateTimer() {
@@ -203,5 +229,58 @@ public class Controller {
         minutes2 = ((elapsedTime / 60) / 60) % 10;
         seconds1 = ((elapsedTime / 60) / 10) % 6;
         seconds2 = (elapsedTime / 60) % 10 ;
+    }
+    public static void updateCollectiblesTimer(){
+        for (CollectibleModel collectibleModel : collectibleModels){
+            collectibleModel.setTimer(collectibleModel.getTimer() + 1);
+        }
+    }
+    public static void wave(){
+        total = difficulty / 2 + 12;
+        if(waveTimer >= 500 ){
+            if(wave == 1 && waveTimer % 500 == 0 && waveTimer <= 1500){
+                enemySpawnSound();
+                for(int i = 0 ; i < total / 12 ; i ++){
+                   randomTriSqa();
+               }
+            }else if(wave == 2 && waveTimer % 600 == 500 && waveTimer <= 1700){
+                enemySpawnSound();
+                for(int i = 0 ; i < total / 10 ; i ++){
+                    randomTriSqa();
+                }
+            }else if(wave == 3 && waveTimer % 1000 == 500  && waveTimer <= 2500){
+                enemySpawnSound();
+                for(int i = 0 ; i < total / 7 ; i ++){
+                    randomTriSqa();
+                }
+            }
+        }
+    }
+    public static void randomTriSqa(){
+        int a = new Random().nextInt(1, 3);
+        if(a == 1){
+            int a1 = new Random().nextInt(1, 3);
+            if(a1 == 1) {
+                new SquareModel(new Random().nextInt(-20, (int) frameWidth + 20),
+                        frameHeight + 50,
+                        SQUARE_LENGTH, SQUARE_HP, SQUARE_DAMAGE, SQUARE_SPEED);
+            }else{
+                new SquareModel(new Random().nextInt(-20, (int) frameWidth + 20),
+                        -50,
+                        SQUARE_LENGTH, SQUARE_HP, SQUARE_DAMAGE, SQUARE_SPEED);
+            }
+        }else{
+            int a1 = new Random().nextInt(1, 3);
+            if(a1 == 1) {
+                new TriangleModel(new Point2D.Double(frameWidth + 50
+                        ,  new Random().nextInt(-20, (int)frameHeight + 20)),
+                        TRIANGLE_LENGTH, TRIANGLE_HP,TRIANGLE_DAMAGE, 0 );
+            }else{
+                new TriangleModel(new Point2D.Double(-50
+                        ,  new Random().nextInt(-20, (int)frameHeight + 20)),
+                        TRIANGLE_LENGTH, TRIANGLE_HP,TRIANGLE_DAMAGE, 0 );
+            }
+
+        }
     }
 }

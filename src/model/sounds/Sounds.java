@@ -39,7 +39,21 @@ public abstract class Sounds {
     }
     public static void  enemySpawnSound(){
         try {
-            File file = new File("");
+            File file = new File("spawnSound.wav");
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue((int)(volume / 1.2) - 80);
+            clip.loop(0);
+            clip.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void waveSound(){
+        try {
+            File file = new File("waveEndSound.wav");
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);

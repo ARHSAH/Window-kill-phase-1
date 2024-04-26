@@ -1,6 +1,7 @@
 package controller;
 
 import model.charactersModel.BulletModel;
+import model.charactersModel.CollectibleModel;
 import model.charactersModel.enemies.SquareModel;
 import model.charactersModel.enemies.TriangleModel;
 import view.panelsView.SettingPanel;
@@ -16,7 +17,7 @@ public class Variables {
 
     public static int allXp = 1000;
     public static int xp = 200;
-    public static int frameWidth = 700, frameHeight = 700;
+    public static double frameWidth = 700, frameHeight = 700;
 
     public static Point2D mouseLocation;
     public static boolean firstOfGame= true;
@@ -29,16 +30,22 @@ public class Variables {
     public  static int squaresNumber = 0;
     public static String activeAbility = "";
     public static int abilityCoolDown = 30000;
+    public static int frameShrinkAmount = 1;
     public static boolean activeGAbility;
     public static ArrayList<BulletModel> removedBullets;
     public static ArrayList<SquareModel> removedSquares;
     public static ArrayList<TriangleModel> removedTriangles;
+    public static ArrayList<CollectibleModel> removedCollectibles;
     public static int eRight, eLeft, eUp, eDown;
     public static boolean a;
     public static int hp = 100;
     public static int epsilonVertices = 0;
-    public static int triangleNumbers = 0;
+    public static int trianglesNumber = 0;
+    public static int collectiblesNumber = 0;
     public static int acesoHp = 0;
     public static int wave = 1;
     public static int elapsedTime, minutes1, minutes2, seconds1, seconds2;
+    public static int total;
+    public static int waveTimer;
+    public static int waveEnemiesNumber;
 }

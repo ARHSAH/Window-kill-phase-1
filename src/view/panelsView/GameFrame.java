@@ -24,7 +24,7 @@ public class GameFrame extends JFrame {
     }
 
     private GameFrame() {
-        this.setSize(Variables.frameWidth, Variables.frameHeight);
+        this.setSize((int)Variables.frameWidth, (int)Variables.frameHeight);
         this.setLocation(300, 70);
         this.setLayout(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

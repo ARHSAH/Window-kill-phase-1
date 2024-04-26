@@ -48,6 +48,7 @@ public class BulletView {
         this.id = id;
     }
     public void draw(Graphics2D g2D){
+
         g2D.fillOval((int)x - radius, (int)y - radius, 2 * radius, 2 * radius);
     }
 }

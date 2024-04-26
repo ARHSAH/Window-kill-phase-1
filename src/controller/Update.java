@@ -1,6 +1,7 @@
 package controller;
 
 import model.charactersModel.BulletModel;
+import model.charactersModel.CollectibleModel;
 import model.charactersModel.EpsilonModel;
 import model.charactersModel.enemies.SquareModel;
 import model.charactersModel.enemies.TriangleModel;
@@ -23,11 +24,11 @@ import static controller.Utils.*;
 import static controller.Variables.*;
 import static java.nio.file.Files.move;
 import static model.charactersModel.BulletModel.bulletModels;
+import static model.charactersModel.CollectibleModel.collectibleModels;
 import static model.charactersModel.enemies.SquareModel.squareModels;
 import static model.charactersModel.enemies.TriangleModel.triangleModels;
 import static model.collision.Collision.*;
-import static model.sounds.Sounds.collapseSound;
-import static model.sounds.Sounds.damageSound;
+import static model.sounds.Sounds.*;
 import static view.charactersView.BulletView.bulletViews;
 import static view.charactersView.enemies.SquareView.squareViews;
 
@@ -47,6 +48,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        waveTimer ++;
         elapsedTime ++;
         bulletTimer ++;
         if(frameExtendingTimer < 5 && !frameExtendingDirection.isEmpty()){
@@ -75,9 +77,14 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
         if(!firstOfGame) {
             updateModel();
             if(elapsedTime % 10 == 0){
+                frameShrinkAmount ++;
+                if(frameShrinkAmount == 5){
+                    frameShrinkAmount = 1;
+                }
                 gameShrinkage();
             }
         }
+        updateCollectiblesTimer();
         updateView();
     }
 
@@ -91,10 +98,17 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
         GamePanel.getINSTANCE().revalidate();
     }
     public void updateModel() {
+        wave();
+        if(squareModels.isEmpty() && triangleModels.isEmpty() && wave < 3 && waveTimer > 1700){
+            waveSound();
+            wave ++;
+            waveTimer = 0;
+        }
         removedSquares = new ArrayList<>();
         removedBullets = new ArrayList<>();
         removedTriangles = new ArrayList<>();
-
+        removedCollectibles = new ArrayList<>();
+        
         //EPSILON SQUARE
         for (SquareModel squareModel : squareModels) {
             Point2D point = circlePolygonCollision(new Point2D.Double(EpsilonModel.getINSTANCE().getX(), EpsilonModel.getINSTANCE().getY()),
@@ -156,6 +170,18 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
                 EpsilonModel.getINSTANCE().setSpeed(3 + triangleSpeed + (int) epsilonSpeed);
                 EpsilonModel.getINSTANCE().setImpact(true);
                 impact(point);
+            }
+        }
+
+        //EPSILON COLLECTIBLE
+        for (CollectibleModel value : collectibleModels){
+            if(value.getTimer() > 600){
+                removedCollectibles.add(value);
+            }
+            else if(value.getCenter().distance(EpsilonModel.getINSTANCE().getCenter()) <
+            EpsilonModel.getINSTANCE().getRadius() + value.getRadius()){
+                xp += value.getXp();
+                removedCollectibles.add(value);
             }
         }
 
@@ -345,12 +371,15 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
 
         //SQUARE REMOVE
         for(SquareModel value : removedSquares){
+            new CollectibleModel(value.getCenter(), COLLECTIBLE_RADIUS);
             squareModels.remove(value);
             collapseSound();
         }
 
         //TRIANGLE REMOVE
         for(TriangleModel value : removedTriangles){
+            new CollectibleModel(value.getCenter(), COLLECTIBLE_RADIUS);
+            new CollectibleModel(value.getA(), COLLECTIBLE_RADIUS);
             triangleModels.remove(value);
             collapseSound();
         }
@@ -359,6 +388,11 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
         for(BulletModel value : removedBullets){
             value.clip.stop();
             bulletModels.remove(value);
+        }
+
+        //COLLECTIBLE REMOVE
+        for(CollectibleModel collectibleModel : removedCollectibles){
+            collectibleModels.remove(collectibleModel);
         }
 
 
@@ -385,7 +419,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
 
         }
         if(e.getKeyChar() == 'x'){
-            if(bulletTimer > 15) {
+            if(bulletTimer > 7) {
                 bulletTimer = 0;
                 Direction bulletDirection = new Direction(new Point2D.Double(
                         (mouseLocation.getX() - EpsilonModel.getINSTANCE().getX()),
@@ -397,7 +431,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
             }
         }
 
-        if(!activeAbility.isEmpty() && e.getKeyChar() == 'k' && abilityCoolDown >= 30000 && xp > 100){
+        if(!activeAbility.isEmpty() && e.getKeyChar() == 'k' && abilityCoolDown >= 30000 && xp >= 100){
             xp -= 100;
             activeGAbility = true;
             abilityCoolDown = 0;

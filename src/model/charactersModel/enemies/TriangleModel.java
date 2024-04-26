@@ -23,14 +23,14 @@ public class TriangleModel implements Movable {
     public static ArrayList<TriangleModel> triangleModels = new ArrayList<>();
     private boolean impact;
     public TriangleModel(Point2D A, int length, int hp, int damage, double speed){
-        Variables.triangleNumbers ++;
+        Variables.trianglesNumber ++;
         this.A = A;
         this.length = length;
         this.hp = hp;
         this.damage = damage;
         this.speed = speed;
         direction = new Point2D.Double(0, 0);
-        this.id = Variables.triangleNumbers;
+        this.id = Variables.trianglesNumber;
         triangleModels.add(this);
         createTriangleView(id);
     }
