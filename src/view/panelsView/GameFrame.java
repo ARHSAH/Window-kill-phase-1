@@ -14,7 +14,6 @@ import static controller.Variables.*;
 
 public class GameFrame extends JFrame {
     private static GameFrame INSTANCE;
-    Timer timer;
 
     public static GameFrame getINSTANCE() {
         if (INSTANCE == null) {
@@ -22,6 +21,11 @@ public class GameFrame extends JFrame {
         }
         return INSTANCE;
     }
+
+    public static void setINSTANCE(GameFrame INSTANCE) {
+        GameFrame.INSTANCE = INSTANCE;
+    }
+
 
     private GameFrame() {
         this.setSize((int)Variables.frameWidth, (int)Variables.frameHeight);

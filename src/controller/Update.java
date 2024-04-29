@@ -36,10 +36,17 @@ import static view.charactersView.enemies.SquareView.squareViews;
 public class Update implements ActionListener, KeyListener, MouseMotionListener{
     Timer timer;
     EpsilonModel epsilon = EpsilonModel.getINSTANCE();
-    public Update(){
-        xp = 0;
-        damage = BULLET_DAMAGE;
-        acesoHp = 0;
+    private static  Update INSTANCE;
+
+    public static Update getINSTANCE() {
+        if(INSTANCE == null){
+            INSTANCE = new Update();
+        }
+        return INSTANCE;
+    }
+
+    private Update(){
+        reset();
         timer = new Timer(Constants.UPS, this);
         timer.start();
         GameFrame.getINSTANCE().addKeyListener(this);
@@ -48,44 +55,65 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        waveTimer ++;
-        elapsedTime ++;
-        bulletTimer ++;
-        if(frameExtendingTimer < 5 && !frameExtendingDirection.isEmpty()){
-            frameExtendingTimer ++;
-            frameExtending(frameExtendingDirection);
-        }else{
-            frameExtendingTimer = 0;
-            frameExtendingDirection = "";
+        if (gameFinished) {
+            gameOver();
+            INSTANCE = null;
+            timer.stop();
         }
-        if(activeGAbility) {
-            if (activeAbility.equals("ares")) {
-                damage += 2;
-                activeGAbility = false;
-            }else if(activeAbility.equals("aceso")){
-                if (abilityCoolDown % 100 == 0 && hp + acesoHp <= 100) {
-                    hp += acesoHp;
-                }else if(abilityCoolDown % 100 == 0 && hp + acesoHp > 100){
-                    hp = 100;
-                }
-            }else if(activeAbility.equals("proteus")){
-                epsilonVertices ++;
-                activeGAbility = false;
+
+        if(squareModels.isEmpty() && triangleModels.isEmpty() && wave == 3 && waveTimer > 1900){
+            if(frameWidth != 0 && frameHeight != 0) {
+                EpsilonModel.getINSTANCE().setRadius(EpsilonModel.getINSTANCE().getRadius() + 1);
+                frameHeight -= 1;
+                frameWidth -= 1;
+            }else{
+                gameOver();
+                gameFinished = true;
+                INSTANCE = null;
+                timer.stop();
             }
         }
-        abilityCoolDown ++;
-        if(!firstOfGame) {
-            updateModel();
-            if(elapsedTime % 10 == 0){
-                frameShrinkAmount ++;
-                if(frameShrinkAmount == 5){
-                    frameShrinkAmount = 1;
-                }
-                gameShrinkage();
+
+        if (!gameFinished) {
+            waveTimer++;
+            elapsedTime++;
+            bulletTimer++;
+            if (frameExtendingTimer < 5 && !frameExtendingDirection.isEmpty()) {
+                frameExtendingTimer++;
+                frameExtending(frameExtendingDirection);
+            } else {
+                frameExtendingTimer = 0;
+                frameExtendingDirection = "";
             }
+            if (activeGAbility) {
+                if (activeAbility.equals("ares")) {
+                    damage += 2;
+                    activeGAbility = false;
+                } else if (activeAbility.equals("aceso")) {
+                    if (abilityCoolDown % 100 == 0 && hp + acesoHp <= 100) {
+                        hp += acesoHp;
+                    } else if (abilityCoolDown % 100 == 0 && hp + acesoHp > 100) {
+                        hp = 100;
+                    }
+                } else if (activeAbility.equals("proteus")) {
+                    epsilonVertices++;
+                    activeGAbility = false;
+                }
+            }
+            abilityCoolDown++;
+            if (!firstOfGame) {
+                updateModel();
+                if (elapsedTime % 10 == 0) {
+                    frameShrinkAmount++;
+                    if (frameShrinkAmount == 5) {
+                        frameShrinkAmount = 1;
+                    }
+                    gameShrinkage();
+                }
+            }
+            updateCollectiblesTimer();
+            updateView();
         }
-        updateCollectiblesTimer();
-        updateView();
     }
 
     public void updateView(){
@@ -104,6 +132,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
             wave ++;
             waveTimer = 0;
         }
+
         removedSquares = new ArrayList<>();
         removedBullets = new ArrayList<>();
         removedTriangles = new ArrayList<>();
@@ -117,8 +146,13 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
                     new Point2D.Double(EpsilonModel.getINSTANCE().getX(), EpsilonModel.getINSTANCE().getY())) <
                     EpsilonModel.getINSTANCE().getRadius()) {
                 if (verticesEpsilonCollision(point, squareModel.getVertices())) {
-                    hp -= squareModel.getDamage();
                     damageSound();
+                    if(hp - squareModel.getDamage() > 0) {
+                        hp -= squareModel.getDamage();
+                    }else{
+                        hp = 0;
+                        gameFinished = true;
+                    }
                 }
                 if (verticesEpsilonCollision(point, EpsilonModel.getINSTANCE().getVertices())) {
                     squareModel.setHp(squareModel.getHp() - 10);
@@ -149,8 +183,13 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
                     new Point2D.Double(EpsilonModel.getINSTANCE().getX(), EpsilonModel.getINSTANCE().getY())) <
                     EpsilonModel.getINSTANCE().getRadius()) {
                 if (verticesEpsilonCollision(point, triangleModel.getVertices())) {
-                    hp -= triangleModel.getDamage();
                     damageSound();
+                    if(hp - triangleModel.getDamage() > 0) {
+                        hp -= triangleModel.getDamage();
+                    }else{
+                        hp = 0;
+                        gameFinished = true;
+                    }
                 }
                 if (verticesEpsilonCollision(point, EpsilonModel.getINSTANCE().getVertices())) {
                     triangleModel.setHp(triangleModel.getHp() - 10);
@@ -309,6 +348,7 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
                 EpsilonModel.getINSTANCE().setDirection(direction.getDirectionVector());
             }
         }
+
         EpsilonModel.getINSTANCE().move();
 
 
@@ -394,8 +434,6 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
         for(CollectibleModel collectibleModel : removedCollectibles){
             collectibleModels.remove(collectibleModel);
         }
-
-
 
 
     }

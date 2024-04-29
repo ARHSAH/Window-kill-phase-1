@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static controller.Constants.*;
+import static controller.Variables.allXp;
 
 public class MenuPanel extends JPanel {
     private static MenuPanel INSTANCE;
@@ -73,7 +74,7 @@ public class MenuPanel extends JPanel {
         start.addActionListener(e -> {
             MainView.mainFrame.setState(JFrame.ICONIFIED);
             GamePanel.getINSTANCE();
-            new Update();
+            Update.getINSTANCE();
         });
         menuLabel.add(start);
 
@@ -90,6 +91,7 @@ public class MenuPanel extends JPanel {
             INSTANCE = null;
             MainView.mainPanel.setSize(SKILLTREE_FRAME_WIDTH, SKILLTREE_FRAME_HEIGHT);
             MainView.mainFrame.setSize(SKILLTREE_FRAME_WIDTH,SKILLTREE_FRAME_HEIGHT);
+            SkillTreePanel.getINSTANCE().xpLabel.setText(String.valueOf(allXp));
             SkillTreePanel.getINSTANCE().setVisible(true);
         });
         menuLabel.add(skillTree);

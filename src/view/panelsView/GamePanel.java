@@ -32,6 +32,10 @@ public class GamePanel extends JPanel {
         return INSTANCE;
     }
 
+    public static void setINSTANCE(GamePanel INSTANCE) {
+        GamePanel.INSTANCE = INSTANCE;
+    }
+
     private GamePanel() {
         this.setSize((int)frameWidth, (int)frameHeight);
         this.setLocation(0, 0);

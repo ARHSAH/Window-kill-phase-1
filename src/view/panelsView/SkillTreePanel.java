@@ -23,7 +23,7 @@ public class SkillTreePanel extends JPanel {
     JLabel xpLabel;
     JButton exit;
     JLabel helloSkillTreeLabel;
-    private SkillTreePanel(){
+    private SkillTreePanel(){;
         ImageIcon lockIcon = new ImageIcon("lock.png");
         this.setSize(SKILLTREE_FRAME_WIDTH, SKILLTREE_FRAME_HEIGHT);
         this.setLocation(0, 0);

@@ -65,4 +65,19 @@ public abstract class Sounds {
             e.printStackTrace();
         }
     }
+
+    public static void gameOverSound(){
+        try {
+            File file = new File("gameOverSound.wav");
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue((int)(volume / 1.2) - 80);
+            clip.loop(0);
+            clip.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

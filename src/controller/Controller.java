@@ -12,10 +12,12 @@ import view.charactersView.EpsilonView;
 import view.charactersView.enemies.SquareView;
 import view.charactersView.enemies.TriangleView;
 import view.panelsView.GameFrame;
+import view.panelsView.GameOverPanel;
 import view.panelsView.GamePanel;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 
@@ -28,6 +30,7 @@ import static model.charactersModel.CollectibleModel.collectibleModels;
 import static model.charactersModel.enemies.SquareModel.squareModels;
 import static model.charactersModel.enemies.TriangleModel.triangleModels;
 import static model.sounds.Sounds.enemySpawnSound;
+import static model.sounds.Sounds.gameOverSound;
 import static view.charactersView.BulletView.bulletViews;
 import static view.charactersView.CollectibleView.collectibleViews;
 import static view.charactersView.enemies.SquareView.squareViews;
@@ -138,8 +141,8 @@ public class Controller {
             frameWidth -= 2 * START_SHRINK_AMOUNT;
             frameHeight -= 2 * START_SHRINK_AMOUNT;
             GameFrame.getINSTANCE().setSize(new Dimension((int)frameWidth, (int)frameHeight));
-            EpsilonModel.getINSTANCE().setX(170);
-            EpsilonModel.getINSTANCE().setY(170);
+            EpsilonModel.getINSTANCE().setX(150);
+            EpsilonModel.getINSTANCE().setY(150);
         } else {
             firstOfGame = false;
         }
@@ -240,17 +243,17 @@ public class Controller {
         if(waveTimer >= 500 ){
             if(wave == 1 && waveTimer % 500 == 0 && waveTimer <= 1500){
                 enemySpawnSound();
-                for(int i = 0 ; i < total / 12 ; i ++){
+                for(int i = 0 ; i < total / 7 ; i ++){
                    randomTriSqa();
                }
             }else if(wave == 2 && waveTimer % 600 == 500 && waveTimer <= 1700){
                 enemySpawnSound();
-                for(int i = 0 ; i < total / 10 ; i ++){
+                for(int i = 0 ; i < total / 5 ; i ++){
                     randomTriSqa();
                 }
-            }else if(wave == 3 && waveTimer % 1000 == 500  && waveTimer <= 2500){
+            }else if(wave == 3 && waveTimer % 700 == 500  && waveTimer <= 1900){
                 enemySpawnSound();
-                for(int i = 0 ; i < total / 7 ; i ++){
+                for(int i = 0 ; i < total / 3 ; i ++){
                     randomTriSqa();
                 }
             }
@@ -282,5 +285,26 @@ public class Controller {
             }
 
         }
+    }
+    public static void gameOver(){
+        allXp += xp;
+        gameOverSound();
+        GameFrame.getINSTANCE().setVisible(false);
+        GamePanel.getINSTANCE().setVisible(false);
+        GameFrame.setINSTANCE(null);
+        GamePanel.setINSTANCE(null);
+        GameOverPanel.getINSTANCE();
+        bulletModels = new ArrayList<>();
+        squareModels = new ArrayList<>();
+        triangleModels = new ArrayList<>();
+        collectibleModels = new ArrayList<>();
+        bulletViews = new ArrayList<>();
+        squareViews = new ArrayList<>();
+        triangleViews = new ArrayList<>();
+        collectibleViews = new ArrayList<>();
+        EpsilonModel.setINSTANCE(null);
+       sensitivity = 50;
+       difficulty = 50;
+       volume = 50;
     }
 }

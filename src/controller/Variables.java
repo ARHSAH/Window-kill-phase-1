@@ -10,13 +10,19 @@ import view.panelsView.SkillTreePanel;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import static controller.Constants.BULLET_DAMAGE;
+import static model.charactersModel.BulletModel.bulletModels;
+import static model.charactersModel.CollectibleModel.collectibleModels;
+import static model.charactersModel.enemies.SquareModel.squareModels;
+import static model.charactersModel.enemies.TriangleModel.triangleModels;
+
 
 public class Variables {
     public static int sensitivity = 50, difficulty = 50,
             volume = 50;
 
-    public static int allXp = 1000;
-    public static int xp = 200;
+    public static int allXp = 0;
+    public static int xp = 0;
     public static double frameWidth = 700, frameHeight = 700;
 
     public static Point2D mouseLocation;
@@ -48,4 +54,37 @@ public class Variables {
     public static int total;
     public static int waveTimer;
     public static int waveEnemiesNumber;
+    public static boolean gameFinished;
+    public static void reset(){
+
+        xp = 0;
+        frameWidth = 700 ;
+        frameHeight = 700;
+        mouseLocation = new Point2D.Double(0, 0);
+        firstOfGame = true;
+        bulletTimer = 0;
+        frameExtendingTimer = 0;
+        frameExtendingDirection = "";
+        bulletNumbers = 0;
+        damage = BULLET_DAMAGE;
+        squaresNumber = 0;
+        abilityCoolDown = 30000;
+        frameShrinkAmount = 1;
+        activeGAbility = false;
+        a = false;
+        hp = 100;
+        epsilonVertices = 0;
+        trianglesNumber = 0;
+        collectiblesNumber = 0;
+        acesoHp = 0;
+        wave = 1;
+        elapsedTime= 0;
+        minutes1 = 0;
+        minutes2 = 0;
+        seconds1 = 0;
+        seconds2 = 0;
+        waveTimer = 0;
+        waveEnemiesNumber = 0;
+        gameFinished = false;
+    }
 }
