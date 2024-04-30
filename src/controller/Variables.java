@@ -55,6 +55,9 @@ public class Variables {
     public static int waveTimer;
     public static int waveEnemiesNumber;
     public static boolean gameFinished;
+    public static boolean bullet;
+    public static boolean athenaActive;
+    public static int athenaTimer;
     public static void reset(){
 
         xp = 0;
@@ -86,5 +89,8 @@ public class Variables {
         waveTimer = 0;
         waveEnemiesNumber = 0;
         gameFinished = false;
+        athenaActive = false;
+        athenaTimer = 0;
+        bullet = false;
     }
 }

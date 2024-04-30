@@ -11,11 +11,17 @@ import view.charactersView.BulletView;
 import view.charactersView.EpsilonView;
 import view.panelsView.GameFrame;
 import view.panelsView.GamePanel;
+import view.panelsView.StorePanel;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
+import java.io.File;
 import java.util.ArrayList;
 
 import static controller.Constants.*;
@@ -35,6 +41,7 @@ import static view.charactersView.enemies.SquareView.squareViews;
 
 public class Update implements ActionListener, KeyListener, MouseMotionListener{
     Timer timer;
+    Clip mainSong;
     EpsilonModel epsilon = EpsilonModel.getINSTANCE();
     private static  Update INSTANCE;
 
@@ -46,6 +53,18 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
     }
 
     private Update(){
+        try {
+            File file = new File("gameMainSong.wav");
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+            mainSong = AudioSystem.getClip();
+            mainSong.open(audioInputStream);
+            FloatControl gainControl = (FloatControl) mainSong.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue((int) (volume / 1.2) - 80);
+            mainSong.loop(5);
+            mainSong.start();
+        } catch (Exception e) {
+                e.printStackTrace();
+            }
         reset();
         timer = new Timer(Constants.UPS, this);
         timer.start();
@@ -57,10 +76,18 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
     public void actionPerformed(ActionEvent e) {
         if (gameFinished) {
             gameOver();
+            mainSong.stop();
             INSTANCE = null;
             timer.stop();
         }
 
+        if(athenaActive){
+            athenaTimer ++;
+            if(athenaTimer > 1000){
+                athenaTimer = 0;
+                athenaActive = false;
+            }
+        }
         if(squareModels.isEmpty() && triangleModels.isEmpty() && wave == 3 && waveTimer > 1900){
             if(frameWidth != 0 && frameHeight != 0) {
                 EpsilonModel.getINSTANCE().setRadius(EpsilonModel.getINSTANCE().getRadius() + 1);
@@ -127,6 +154,24 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
     }
     public void updateModel() {
         wave();
+        if(bulletTimer > 7 && bullet) {
+            bulletTimer = 0;
+            Direction bulletDirection = new Direction(new Point2D.Double(
+                    (mouseLocation.getX() - EpsilonModel.getINSTANCE().getX()),
+                    mouseLocation.getY() - EpsilonModel.getINSTANCE().getY()));
+            new BulletModel(EpsilonModel.getINSTANCE().getX(),
+                    EpsilonModel.getINSTANCE().getY(), 4, damage, BULLET_SPEED,
+                    bulletDirection.getDirectionVector());
+            if(athenaActive){
+                new BulletModel(EpsilonModel.getINSTANCE().getX(),
+                        EpsilonModel.getINSTANCE().getY() + 10, 4, damage, BULLET_SPEED,
+                        bulletDirection.getDirectionVector());
+                new BulletModel(EpsilonModel.getINSTANCE().getX(),
+                        EpsilonModel.getINSTANCE().getY() - 10, 4, damage, BULLET_SPEED,
+                        bulletDirection.getDirectionVector());
+            }
+
+        }
         if(squareModels.isEmpty() && triangleModels.isEmpty() && wave < 3 && waveTimer > 1700){
             waveSound();
             wave ++;
@@ -457,16 +502,15 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
 
         }
         if(e.getKeyChar() == 'x'){
-            if(bulletTimer > 7) {
-                bulletTimer = 0;
-                Direction bulletDirection = new Direction(new Point2D.Double(
-                        (mouseLocation.getX() - EpsilonModel.getINSTANCE().getX()),
-                        mouseLocation.getY() - EpsilonModel.getINSTANCE().getY()));
-                new BulletModel(EpsilonModel.getINSTANCE().getX(),
-                        EpsilonModel.getINSTANCE().getY(), 4, damage, BULLET_SPEED,
-                        bulletDirection.getDirectionVector());
+            bullet = true;
 
-            }
+        }
+
+        if(e.getKeyChar() == 'p'){
+            mainSong.stop();
+            timer.stop();
+            StorePanel.getINSTANCE();
+
         }
 
         if(!activeAbility.isEmpty() && e.getKeyChar() == 'k' && abilityCoolDown >= 30000 && xp >= 100){
@@ -495,6 +539,10 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
             eLeft = 0;
             epsilon.setSpeed(0.5);
         }
+        if(e.getKeyChar() == 'x'){
+            bullet = false;
+        }
+
 
     }
     @Override
@@ -507,6 +555,24 @@ public class Update implements ActionListener, KeyListener, MouseMotionListener{
         mouseLocation = new Point2D.Double(e.getX(), e.getY());
     }
 
+    public Timer getTimer() {
+        return timer;
+    }
+
+    public void setTimer(Timer timer) {
+        this.timer = timer;
+    }
+
+    public Clip getMainSong() {
+        return mainSong;
+    }
+
+    public void setMainSong(Clip mainSong) {
+        this.mainSong = mainSong;
+    }
 
 
+    public static void setINSTANCE(Update INSTANCE) {
+        Update.INSTANCE = INSTANCE;
+    }
 }

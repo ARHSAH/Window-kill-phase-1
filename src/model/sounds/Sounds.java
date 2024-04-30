@@ -9,6 +9,7 @@ import java.io.File;
 import static controller.Variables.volume;
 
 public abstract class Sounds {
+
     public static void  damageSound(){
         try {
             File file = new File("damage.wav");
@@ -80,4 +81,6 @@ public abstract class Sounds {
             e.printStackTrace();
         }
     }
+
+
 }

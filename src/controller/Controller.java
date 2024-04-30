@@ -201,6 +201,32 @@ public class Controller {
 
     }
 
+    public static void apolloImpact(Point2D point){
+        for(SquareModel squareModel : squareModels){
+            if(squareModel.getCenter().distance(point) > 50 &&
+                    squareModel.getCenter().distance(point) < 200){
+                Point2D effectVector = new Point2D.Double(point.getX() - squareModel.getCenter().getX(),
+                        point.getY() - squareModel.getCenter().getY());
+                Direction directionSquare = new Direction(reverseVector(effectVector));
+                squareModel.setDirection(directionSquare.getDirectionVector());
+                squareModel.setSpeed(15);
+                squareModel.setImpact(true);
+            }
+        }
+        for(TriangleModel triangleModel : triangleModels){
+            if(triangleModel.getCenter().distance(point) > 50 &&
+                    triangleModel.getCenter().distance(point) < 130){
+                Point2D effectVector = new Point2D.Double(point.getX() - triangleModel.getCenter().getX(),
+                        point.getY() - triangleModel.getCenter().getY());
+                Direction directionSquare = new Direction(reverseVector(effectVector));
+                triangleModel.setDirection(directionSquare.getDirectionVector());
+                triangleModel.setSpeed(15);
+                triangleModel.setImpact(true);
+            }
+        }
+
+    }
+
     public static void frameExtending(String direction) {
         if (direction.equals("right")) {
             GameFrame.getINSTANCE().setLocation(new Point(
